@@ -4,372 +4,913 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#00BCD4">
-  <title>漕河泾减脂餐厅推荐</title>
+  <meta name="theme-color" content="#007AFF">
+  <title>漕河泾减脂餐厅</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@4/lib/index.css">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:#f7f8fa;-webkit-font-smoothing:antialiased}
-    #app{min-height:100vh;padding-bottom:70px}
-    .header{background:linear-gradient(135deg,#00BCD4 0%,#26C6DA 100%);color:white;padding:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,188,212,0.3)}
-    .header h1{font-size:18px;font-weight:600;margin-bottom:4px}
-    .header .subtitle{font-size:11px;opacity:0.9}
-    .search-box{margin-top:10px}
-    .van-search__content{background:rgba(255,255,255,0.2)!important;border:1px solid rgba(255,255,255,0.3)!important;border-radius:20px!important}
-    .van-field__control{color:white!important}
-    .van-field__control::placeholder{color:rgba(255,255,255,0.7)!important}
-    .van-tabs__nav{background:#f7f8fa!important}
-    .van-tab{font-size:14px!important}
-    .van-tab--active{color:#00BCD4!important}
-    .van-tabs__line{background-color:#00BCD4!important}
-    .filter-bar{padding:12px 16px;background:white;border-bottom:1px solid #eee;display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-    .filter-tag{padding:6px 14px;border-radius:16px;font-size:12px;background:#f5f5f5;color:#666;border:1px solid #e5e5e5;white-space:nowrap;flex-shrink:0}
-    .filter-tag.active{background:#E3F2FD;color:#00BCD4;border-color:#00BCD4}
-    .restaurant-list{padding:12px 16px}
-    .restaurant-card{background:white;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;transition:transform 0.2s}
-    .restaurant-card:active{transform:scale(0.98)}
-    .restaurant-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-    .restaurant-name{font-size:14px;font-weight:600;color:#333;display:flex;align-items:center;gap:6px}
-    .restaurant-emoji{font-size:16px}
-    .restaurant-price{font-size:11px;color:#999}
-    .restaurant-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-    .stars{color:#FFB300;font-size:11px;letter-spacing:-1px}
-    .cuisine-tag{background:#f0f9ff;color:#00BCD4;padding:2px 8px;border-radius:10px;font-size:11px}
-    .restaurant-tip{background:#FFF8E1;padding:8px 10px;border-radius:8px;font-size:12px;color:#666;line-height:1.4}
-    .favorite-btn{font-size:20px;padding:4px;opacity:0.6;transition:opacity 0.2s}
-    .favorite-btn.active{opacity:1}
-    .favorite-btn:active{transform:scale(1.2)}
+    :root {
+      --ios-bg: #F2F2F7;
+      --ios-card: #FFFFFF;
+      --ios-blue: #007AFF;
+      --ios-green: #34C759;
+      --ios-orange: #FF9500;
+      --ios-red: #FF3B30;
+      --ios-gray: #8E8E93;
+      --ios-gray2: #AEAEB2;
+      --ios-gray3: #C7C7CC;
+      --ios-gray4: #D1D1D6;
+      --ios-gray5: #E5E5EA;
+      --ios-gray6: #F2F2F7;
+      --ios-text: #000000;
+      --ios-text2: #3A3A3C;
+      --ios-separator: rgba(60, 60, 67, 0.29);
+    }
     
-    /* Detail Modal */
-    .detail-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:white;z-index:1000;overflow-y:auto}
-    .detail-header{background:linear-gradient(135deg,#00BCD4 0%,#26C6DA 100%);color:white;padding:16px;padding-top:44px;position:sticky;top:0;z-index:10}
-    .detail-back{display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;cursor:pointer}
-    .detail-home{display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;cursor:pointer;position:absolute;top:44px;right:16px;background:rgba(255,255,255,0.2);padding:6px 12px;border-radius:20px}
-    .detail-title{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
-    .detail-body{padding:16px}
-    .detail-meta{display:flex;gap:12px;margin-bottom:16px;padding:14px;background:#f5f5f5;border-radius:12px}
-    .detail-meta-item{text-align:center;flex:1}
-    .detail-meta-value{font-size:16px;font-weight:600;color:#00BCD4}
-    .detail-meta-label{font-size:11px;color:#999;margin-top:2px}
-    .detail-section{margin-bottom:16px}
-    .detail-section-title{font-size:14px;font-weight:600;color:#333;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    [data-theme="dark"] {
+      --ios-bg: #000000;
+      --ios-card: #1C1C1E;
+      --ios-blue: #0A84FF;
+      --ios-green: #30D158;
+      --ios-orange: #FF9F0A;
+      --ios-red: #FF453A;
+      --ios-gray: #8E8E93;
+      --ios-gray2: #636366;
+      --ios-gray3: #48484A;
+      --ios-gray4: #3A3A3C;
+      --ios-gray5: #2C2C2E;
+      --ios-gray6: #1C1C1E;
+      --ios-text: #FFFFFF;
+      --ios-text2: #EBEBF5;
+      --ios-separator: rgba(84, 84, 88, 0.65);
+    }
     
-    /* Food Item Cards */
-    .food-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .food-card{padding:10px;border-radius:10px;display:flex;flex-direction:column;justify-content:space-between;min-height:70px;cursor:pointer;transition:transform 0.2s,opacity 0.2s}
-    .food-card:active{transform:scale(0.95)}
-    .food-card.selected{opacity:0.7}
-    .food-card.recommend{background:#E8F5E9;border:2px solid #A5D6A7}
-    .food-card.recommend.selected{border-color:#4CAF50;background:#C8E6C9}
-    .food-card.avoid{background:#FFEBEE;border:2px solid #EF9A9A}
-    .food-card.avoid.selected{border-color:#F44336;background:#FFCDD2}
-    .food-name{font-size:12px;font-weight:500;color:#333;line-height:1.4;margin-bottom:6px}
-    .food-card.recommend .food-name{color:#2E7D32}
-    .food-card.avoid .food-name{color:#C62828}
-    .food-cal{font-size:11px;padding:2px 8px;border-radius:10px;display:inline-block;align-self:flex-start}
-    .food-card.recommend .food-cal{background:#C8E6C9;color:#2E7D32}
-    .food-card.avoid .food-cal{background:#FFCDD2;color:#C62828}
-    .food-check{position:absolute;top:6px;right:6px;font-size:14px}
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    .tips-box{background:#FFF8E1;padding:12px;border-radius:10px;font-size:13px;line-height:1.6;color:#E65100;border:1px solid #FFE082}
-    .tips-box::before{content:'💡 ';}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      background: var(--ios-bg);
+      color: var(--ios-text);
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease;
+    }
     
-    /* Calorie Counter */
-    .calorie-counter{background:linear-gradient(135deg,#FF9800,#FFB74D);padding:16px;border-radius:12px;color:white;margin-bottom:16px}
-    .calorie-counter-title{font-size:12px;opacity:0.9;margin-bottom:8px}
-    .calorie-counter-value{font-size:32px;font-weight:700}
-    .calorie-counter-unit{font-size:14px;opacity:0.8}
-    .calorie-counter-tip{font-size:11px;opacity:0.8;margin-top:8px}
-    .calorie-counter.danger{background:linear-gradient(135deg,#F44336,#EF5350)}
+    #app { min-height: 100vh; padding-bottom: 100px; }
     
-    /* Check-in Button */
-    .checkin-btn{width:100%;padding:14px;border-radius:25px;font-size:15px;font-weight:600;background:#00BCD4;color:white;border:none;margin-top:16px}
-    .checkin-btn:disabled{opacity:0.5}
+    /* iOS Navigation Bar with Blur */
+    .ios-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--ios-separator);
+      padding: 8px 16px;
+      padding-top: 44px;
+    }
     
-    /* Favorite & Checkin Tabs */
-    .empty-state{text-align:center;padding:60px 20px;color:#999}
-    .empty-icon{font-size:48px;margin-bottom:12px}
-    .empty-text{font-size:14px;color:#999;margin-top:8px}
-    .bottom-info{text-align:center;padding:16px;color:#999;font-size:11px}
+    [data-theme="dark"] .ios-nav {
+      background: rgba(28, 28, 30, 0.72);
+    }
     
-    /* Checkin History */
-    .checkin-card{background:white;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-    .checkin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-    .checkin-restaurant{font-size:14px;font-weight:600;color:#333;display:flex;align-items:center;gap:6px}
-    .checkin-date{font-size:11px;color:#999}
-    .checkin-foods{font-size:12px;color:#666;line-height:1.5;background:#f5f5f5;padding:8px;border-radius:8px}
-    .checkin-cal{font-size:14px;color:#FF9800;font-weight:600;margin-top:8px}
-    .checkin-del{font-size:12px;color:#F44336;padding:4px 8px;border:1px solid #F44336;border-radius:4px;background:transparent}
+    .ios-nav-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin-bottom: 4px;
+    }
     
-    /* Favorite Card */
-    .fav-card{background:white;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;transition:transform 0.2s}
-    .fav-card:active{transform:scale(0.98)}
-    .fav-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-    .fav-name{font-size:14px;font-weight:600;color:#333;display:flex;align-items:center;gap:6px}
-    .fav-unfav{font-size:16px;color:#F44336;padding:4px}
-    .fav-meta{display:flex;align-items:center;gap:8px}
+    .ios-nav-subtitle {
+      font-size: 15px;
+      color: var(--ios-gray);
+      font-weight: 400;
+    }
+    
+    .ios-search {
+      margin-top: 12px;
+    }
+    
+    .ios-search .van-search__content {
+      background: var(--ios-gray5) !important;
+      border-radius: 10px !important;
+    }
+    
+    /* iOS Segmented Control */
+    .ios-segment {
+      display: flex;
+      background: var(--ios-gray5);
+      border-radius: 8px;
+      padding: 2px;
+      margin: 12px 16px;
+    }
+    
+    .ios-segment-item {
+      flex: 1;
+      text-align: center;
+      padding: 8px 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ios-text);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    
+    .ios-segment-item.active {
+      background: var(--ios-card);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    
+    /* iOS Filter Chips */
+    .ios-filter {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .ios-filter::-webkit-scrollbar { display: none; }
+    
+    .ios-chip {
+      padding: 8px 16px;
+      background: var(--ios-gray5);
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 400;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    
+    .ios-chip.active {
+      background: var(--ios-blue);
+      color: white;
+    }
+    
+    /* iOS List */
+    .ios-list {
+      padding: 0 16px;
+    }
+    
+    .ios-cell {
+      background: var(--ios-card);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: transform 0.2s;
+    }
+    
+    .ios-cell:active { transform: scale(0.98); }
+    
+    .ios-cell-content {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .ios-cell-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--ios-blue), #5856D6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    .ios-cell-body {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .ios-cell-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ios-text);
+      margin-bottom: 2px;
+      letter-spacing: -0.2px;
+    }
+    
+    .ios-cell-subtitle {
+      font-size: 15px;
+      color: var(--ios-gray);
+      font-weight: 400;
+    }
+    
+    .ios-cell-accessory {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--ios-gray);
+      font-size: 17px;
+    }
+    
+    /* iOS Big Number Display */
+    .ios-metric {
+      background: var(--ios-card);
+      border-radius: 20px;
+      margin: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .ios-metric-value {
+      font-size: 64px;
+      font-weight: 200;
+      line-height: 1;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--ios-blue), #5856D6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .ios-metric-label {
+      font-size: 15px;
+      color: var(--ios-gray);
+      margin-top: 8px;
+      font-weight: 400;
+    }
+    
+    .ios-metric.danger .ios-metric-value {
+      background: linear-gradient(135deg, var(--ios-red), #FF6B6B);
+      -webkit-background-clip: text;
+    }
+    
+    /* iOS Button */
+    .ios-btn {
+      width: calc(100% - 32px);
+      margin: 16px;
+      padding: 16px;
+      background: var(--ios-blue);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      transition: all 0.2s;
+    }
+    
+    .ios-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .ios-btn:disabled { opacity: 0.4; }
+    
+    .ios-btn-secondary {
+      background: var(--ios-gray5);
+      color: var(--ios-blue);
+    }
+    
+    /* iOS Bottom Sheet */
+    .ios-sheet-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .ios-sheet-overlay.show { opacity: 1; }
+    
+    .ios-sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 10%;
+      background: var(--ios-bg);
+      border-radius: 24px 24px 0 0;
+      z-index: 1001;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .ios-sheet.show { transform: translateY(0); }
+    
+    .ios-sheet-handle {
+      width: 36px;
+      height: 5px;
+      background: var(--ios-gray3);
+      border-radius: 3px;
+      margin: 8px auto;
+    }
+    
+    .ios-sheet-header {
+      padding: 8px 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 0.5px solid var(--ios-separator);
+    }
+    
+    .ios-sheet-title {
+      font-size: 17px;
+      font-weight: 600;
+    }
+    
+    .ios-sheet-close {
+      font-size: 17px;
+      color: var(--ios-blue);
+      font-weight: 400;
+      padding: 8px;
+      margin: -8px;
+    }
+    
+    .ios-sheet-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+    
+    /* iOS Grid Cards */
+    .ios-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    
+    .ios-grid-card {
+      background: var(--ios-card);
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .ios-grid-card:active { transform: scale(0.96); }
+    .ios-grid-card.selected { opacity: 0.6; }
+    
+    .ios-grid-card.good { background: linear-gradient(135deg, rgba(52, 199, 89, 0.1), rgba(52, 199, 89, 0.05)); }
+    .ios-grid-card.bad { background: linear-gradient(135deg, rgba(255, 59, 48, 0.1), rgba(255, 59, 48, 0.05)); }
+    
+    .ios-grid-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ios-text);
+      line-height: 1.3;
+    }
+    
+    .ios-grid-badge {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      align-self: flex-start;
+    }
+    
+    .ios-grid-card.good .ios-grid-badge { background: rgba(52, 199, 89, 0.15); color: var(--ios-green); }
+    .ios-grid-card.bad .ios-grid-badge { background: rgba(255, 59, 48, 0.15); color: var(--ios-red); }
+    
+    .ios-grid-check {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      background: var(--ios-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+    }
+    
+    /* iOS Section Header */
+    .ios-section {
+      margin-bottom: 20px;
+    }
+    
+    .ios-section-header {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      padding: 0 4px;
+      letter-spacing: -0.3px;
+    }
+    
+    /* iOS Info Box */
+    .ios-info {
+      background: rgba(255, 204, 0, 0.12);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ios-text);
+    }
+    
+    /* iOS Custom Input */
+    .ios-input-group {
+      background: var(--ios-card);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    
+    .ios-input-row {
+      padding: 12px 16px;
+      border-bottom: 0.5px solid var(--ios-separator);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .ios-input-row:last-child { border-bottom: none; }
+    
+    .ios-input-label {
+      font-size: 17px;
+      color: var(--ios-text);
+      min-width: 80px;
+    }
+    
+    .ios-input-field {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 17px;
+      color: var(--ios-text);
+      outline: none;
+    }
+    
+    .ios-input-field::placeholder { color: var(--ios-gray3); }
+    
+    /* iOS Tag */
+    .ios-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .ios-tag {
+      background: var(--ios-blue);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .ios-tag-remove {
+      width: 18px;
+      height: 18px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    
+    /* iOS Suggestions */
+    .ios-suggestions {
+      background: var(--ios-card);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    
+    .ios-suggestion-item {
+      padding: 14px 16px;
+      border-bottom: 0.5px solid var(--ios-separator);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .ios-suggestion-item:last-child { border-bottom: none; }
+    .ios-suggestion-item:active { background: var(--ios-gray6); }
+    
+    .ios-suggestion-name { font-size: 17px; color: var(--ios-text); }
+    .ios-suggestion-cal { font-size: 15px; color: var(--ios-blue); font-weight: 600; }
+    
+    /* iOS Empty State */
+    .ios-empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--ios-gray);
+    }
+    
+    .ios-empty-icon { font-size: 64px; margin-bottom: 16px; }
+    .ios-empty-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--ios-text); }
+    .ios-empty-text { font-size: 15px; }
+    
+    /* iOS Footer */
+    .ios-footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--ios-gray);
+      font-size: 13px;
+    }
+    
+    /* Floating Action Button */
+    .ios-fab {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 64px;
+      height: 64px;
+      background: var(--ios-card);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 99;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .ios-fab:active { transform: scale(0.92); }
+    
+    /* iOS Modal with Blur */
+    .ios-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .ios-modal-overlay.show { opacity: 1; }
+    
+    .ios-modal {
+      background: var(--ios-card);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 340px;
+      overflow: hidden;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    
+    .ios-modal-overlay.show .ios-modal { transform: scale(1); }
+    
+    .ios-modal-header {
+      background: var(--ios-blue);
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .ios-modal-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .ios-modal-subtitle { font-size: 15px; opacity: 0.8; }
+    
+    .ios-modal-body { padding: 20px; }
+    
+    .ios-modal-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--ios-blue);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .ios-modal-btn.secondary {
+      background: var(--ios-gray5);
+      color: var(--ios-text);
+    }
+    
+    /* iOS Fortune Display */
+    .ios-fortune {
+      background: var(--ios-gray6);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .ios-fortune-icon { font-size: 48px; margin-bottom: 12px; }
+    .ios-fortune-text { font-size: 15px; color: var(--ios-text); line-height: 1.5; }
+    
+    /* iOS Slot Display */
+    .ios-slot {
+      background: var(--ios-gray6);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .ios-slot-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .ios-slot-emoji { font-size: 40px; }
+    
+    /* Theme Toggle */
+    .ios-theme-toggle {
+      position: fixed;
+      top: 50px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      background: var(--ios-gray5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      z-index: 101;
+      cursor: pointer;
+    }
+    
+    /* Animations */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .ios-cell { animation: slideUp 0.4s ease-out; }
     
     /* Toast */
-    .van-toast{font-size:14px!important}
-    
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .restaurant-card{animation:fadeIn 0.3s ease-out}
-    .checkin-card{animation:fadeIn 0.3s ease-out}
-    .fav-card{animation:fadeIn 0.3s ease-out}
-    
-    /* Floating Button */
-    .float-btn{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FF9800,#FF5722);color:white;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,152,0,0.4);z-index:99;cursor:pointer;transition:transform 0.2s}
-    .float-btn:active{transform:scale(0.95)}
-    
-    /* Slot Machine Modal */
-    .slot-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px}
-    .slot-container{width:100%;max-width:360px;background:white;border-radius:20px;overflow:hidden;animation:slotPop 0.4s ease-out}
-    @keyframes slotPop{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
-    .slot-header{background:linear-gradient(135deg,#FF9800,#FF5722);color:white;padding:20px;text-align:center}
-    .slot-title{font-size:20px;font-weight:700;margin-bottom:4px}
-    .slot-date{font-size:12px;opacity:0.9}
-    .slot-body{padding:20px}
-    .slot-fortune{background:linear-gradient(135deg,#FFF8E1,#FFECB3);padding:16px;border-radius:12px;margin-bottom:20px;text-align:center}
-    .slot-fortune-icon{font-size:36px;margin-bottom:8px}
-    .slot-fortune-text{font-size:15px;color:#E65100;line-height:1.6;font-weight:500}
-    .slot-machine{background:#f5f5f5;padding:20px;border-radius:12px;margin-bottom:20px;text-align:center}
-    .slot-display{background:white;padding:20px;border-radius:12px;font-size:28px;font-weight:700;color:#333;min-height:80px;display:flex;align-items:center;justify-content:center;gap:8px}
-    .slot-display-name{font-size:16px}
-    .slot-btn{width:100%;padding:14px;border-radius:25px;font-size:15px;font-weight:600;background:#FF9800;color:white;border:none;margin-bottom:10px}
-    .slot-btn:disabled{opacity:0.5}
-    .slot-close{width:100%;padding:12px;border-radius:25px;font-size:14px;background:#f5f5f5;color:#666;border:none}
-    .slot-result{margin-top:16px;padding:16px;background:#E8F5E9;border-radius:12px;text-align:center}
-    .slot-result-title{font-size:12px;color:#2E7D32;margin-bottom:8px}
-    .slot-result-name{font-size:18px;font-weight:600;color:#333;display:flex;align-items:center;justify-content:center;gap:8px}
-    .slot-result-meta{font-size:12px;color:#666;margin-top:8px}
+    .van-toast {
+      border-radius: 12px !important;
+      font-size: 15px !important;
+    }
   </style>
 </head>
 <body>
   <div id="app">
-    <div class="header">
-      <h1>🥗 漕河泾减脂餐厅推荐</h1>
-      <div class="subtitle">漕河泾印象城 | 科学饮食轻松减脂</div>
-      <div class="search-box">
+    <!-- Theme Toggle -->
+    <div class="ios-theme-toggle" @click="toggleTheme">{{isDark?'☀️':'🌙'}}</div>
+    
+    <!-- Navigation -->
+    <div class="ios-nav">
+      <div class="ios-nav-title">🥗 减脂餐厅</div>
+      <div class="ios-nav-subtitle">漕河泾印象城 · 科学饮食</div>
+      <div class="ios-search">
         <van-search v-model="searchText" placeholder="搜索餐厅或菜系..." shape="round" background="transparent"/>
       </div>
     </div>
     
-    <van-tabs v-model:active="activeTab" @change="onTabChange" sticky>
-      <van-tab title="🍽️ 正餐快餐" name="main"></van-tab>
-      <van-tab title="🥤 饮料甜品" name="drinks"></van-tab>
-      <van-tab title="⭐ 我的收藏" name="favorites"></van-tab>
-      <van-tab title="📝 打卡记录" name="checkins"></van-tab>
-    </van-tabs>
+    <!-- Segmented Control -->
+    <div class="ios-segment">
+      <div class="ios-segment-item" :class="{active:activeTab==='main'}" @click="activeTab='main'">正餐</div>
+      <div class="ios-segment-item" :class="{active:activeTab==='drinks'}" @click="activeTab='drinks'">饮品</div>
+      <div class="ios-segment-item" :class="{active:activeTab==='favorites'}" @click="activeTab='favorites'">收藏</div>
+      <div class="ios-segment-item" :class="{active:activeTab==='checkins'}" @click="activeTab='checkins'">记录</div>
+    </div>
     
-    <!-- Filter Bar (only show for main/drinks tabs) -->
-    <div class="filter-bar" v-if="activeTab==='main' || activeTab==='drinks'">
-      <span class="filter-tag" :class="{active:currentRating===0}" @click="filterByRating(0)">全部</span>
-      <span class="filter-tag" :class="{active:currentRating===5}" @click="filterByRating(5)">⭐⭐⭐⭐⭐</span>
-      <span class="filter-tag" :class="{active:currentRating===4}" @click="filterByRating(4)">⭐⭐⭐⭐</span>
-      <span class="filter-tag" :class="{active:currentRating===3}" @click="filterByRating(3)">⭐⭐⭐</span>
+    <!-- Filter Chips -->
+    <div class="ios-filter" v-if="activeTab==='main' || activeTab==='drinks'">
+      <div class="ios-chip" :class="{active:currentRating===0}" @click="filterByRating(0)">全部</div>
+      <div class="ios-chip" :class="{active:currentRating===5}" @click="filterByRating(5)">⭐⭐⭐⭐⭐</div>
+      <div class="ios-chip" :class="{active:currentRating===4}" @click="filterByRating(4)">⭐⭐⭐⭐</div>
+      <div class="ios-chip" :class="{active:currentRating===3}" @click="filterByRating(3)">⭐⭐⭐</div>
     </div>
     
     <!-- Restaurant List -->
-    <div class="restaurant-list" v-if="activeTab==='main' || activeTab==='drinks'">
-      <div class="restaurant-card" v-for="item in filteredRestaurants" :key="item.id" @click="showDetail(item)">
-        <div class="restaurant-header">
-          <div class="restaurant-name">
-            <span class="restaurant-emoji">{{item.emoji}}</span>
-            <span>{{item.name}}</span>
+    <div class="ios-list" v-if="activeTab==='main' || activeTab==='drinks'">
+      <div class="ios-cell" v-for="item in filteredRestaurants" :key="item.id" @click="showDetail(item)">
+        <div class="ios-cell-content">
+          <div class="ios-cell-icon">{{item.emoji}}</div>
+          <div class="ios-cell-body">
+            <div class="ios-cell-title">{{item.name}}</div>
+            <div class="ios-cell-subtitle">{{'⭐'.repeat(item.rating)}} · {{item.cuisine}} · ¥{{item.price}}</div>
           </div>
-          <div class="restaurant-price">¥{{item.price}}</div>
+          <div class="ios-cell-accessory">›</div>
         </div>
-        <div class="restaurant-meta">
-          <span class="stars">{{'⭐'.repeat(item.rating)}}</span>
-          <span class="cuisine-tag">{{item.cuisine}}</span>
-        </div>
-        <div class="restaurant-tip">{{item.tips}}</div>
       </div>
     </div>
     
-    <!-- Favorites List -->
-    <div class="restaurant-list" v-if="activeTab==='favorites'">
-      <div class="fav-card" v-for="item in favoriteRestaurants" :key="item.id" @click="showDetail(item)">
-        <div class="fav-header">
-          <div class="fav-name">
-            <span class="restaurant-emoji">{{item.emoji}}</span>
-            <span>{{item.name}}</span>
+    <!-- Favorites -->
+    <div class="ios-list" v-if="activeTab==='favorites'">
+      <div class="ios-cell" v-for="item in favoriteRestaurants" :key="item.id" @click="showDetail(item)">
+        <div class="ios-cell-content">
+          <div class="ios-cell-icon">{{item.emoji}}</div>
+          <div class="ios-cell-body">
+            <div class="ios-cell-title">{{item.name}}</div>
+            <div class="ios-cell-subtitle">{{'⭐'.repeat(item.rating)}} · {{item.cuisine}}</div>
           </div>
-          <div class="fav-unfav" @click.stop="toggleFavorite(item)">❤️</div>
-        </div>
-        <div class="fav-meta">
-          <span class="stars">{{'⭐'.repeat(item.rating)}}</span>
-          <span class="cuisine-tag">{{item.cuisine}}</span>
-          <span class="restaurant-price">¥{{item.price}}</span>
+          <div class="ios-cell-accessory" @click.stop="toggleFavorite(item)">❤️</div>
         </div>
       </div>
-      <div class="empty-state" v-if="favoriteRestaurants.length===0">
-        <div class="empty-icon">❤️</div>
-        <div>还没有收藏的餐厅</div>
-        <div class="empty-text">点击餐厅详情页的❤️来收藏</div>
+      <div class="ios-empty" v-if="favoriteRestaurants.length===0">
+        <div class="ios-empty-icon">❤️</div>
+        <div class="ios-empty-title">还没有收藏</div>
+        <div class="ios-empty-text">点击餐厅详情页的❤️来收藏</div>
       </div>
     </div>
     
     <!-- Checkin History -->
-    <div class="restaurant-list" v-if="activeTab==='checkins'">
-      <div class="checkin-card" v-for="(ci, idx) in checkinHistory" :key="idx">
-        <div class="checkin-header">
-          <div class="checkin-restaurant">
-            <span>{{getRestaurantEmoji(ci.restaurantId)}}</span>
-            <span>{{ci.restaurantName}}</span>
+    <div class="ios-list" v-if="activeTab==='checkins'">
+      <div class="ios-cell" v-for="(ci, idx) in checkinHistory" :key="idx">
+        <div class="ios-cell-content">
+          <div class="ios-cell-icon">{{getRestaurantEmoji(ci.restaurantId)}}</div>
+          <div class="ios-cell-body">
+            <div class="ios-cell-title">{{ci.restaurantName}}</div>
+            <div class="ios-cell-subtitle">{{ci.date}} · {{ci.foods.slice(0,2).join('、')}}{{ci.foods.length>2?'...':''}}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="checkin-date">{{ci.date}}</div>
-            <button class="checkin-del" @click="deleteCheckin(idx)">删除</button>
+          <div style="text-align:right">
+            <div style="font-size:20px;font-weight:600;color:var(--ios-orange)">{{ci.calories}}</div>
+            <div style="font-size:11px;color:var(--ios-gray)">kcal</div>
           </div>
         </div>
-        <div class="checkin-foods">{{ci.foods.join('、')}}</div>
-        <div class="checkin-cal">🔥 {{ci.calories}} kcal</div>
       </div>
-      <div class="empty-state" v-if="checkinHistory.length===0">
-        <div class="empty-icon">📝</div>
-        <div>还没有打卡记录</div>
-        <div class="empty-text">选择餐厅菜品后点击"打卡"来记录</div>
-      </div>
-    </div>
-    
-    <div class="bottom-info" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.length}} 家餐厅 | 数据更新于2026年4月</div>
-    <div class="bottom-info" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.length}} 家餐厅</div>
-    <div class="bottom-info" v-if="activeTab==='checkins'">共 {{checkinHistory.length}} 条打卡记录</div>
-    
-    <!-- Floating Button -->
-    <div class="float-btn" @click="openSlotMachine">🎰</div>
-    
-    <!-- Slot Machine Modal -->
-    <div class="slot-modal" v-if="showSlot" @click.self="closeSlotMachine">
-      <div class="slot-container">
-        <div class="slot-header">
-          <div class="slot-title">🎰 今日运势</div>
-          <div class="slot-date">{{todayStr}}</div>
-        </div>
-        <div class="slot-body">
-          <div class="slot-fortune">
-            <div class="slot-fortune-icon">{{fortuneIcon}}</div>
-            <div class="slot-fortune-text">{{fortuneText}}</div>
-          </div>
-          <div class="slot-machine">
-            <div class="slot-display" v-if="!slotResult">🎲</div>
-            <div class="slot-display" v-else>
-              <span>{{slotResult.emoji}}</span>
-              <span class="slot-display-name">{{slotResult.name}}</span>
-            </div>
-          </div>
-          <button class="slot-btn" @click="spinSlot" :disabled="isSpinning">{{isSpinning?'转动中...':(slotResult?'再来一次':'开始抽取')}}</button>
-          <button class="slot-btn" v-if="slotResult" @click="viewSlotResult" style="background:#00BCD4">查看详情</button>
-          <button class="slot-close" @click="closeSlotMachine">关闭</button>
-        </div>
+      <div class="ios-empty" v-if="checkinHistory.length===0">
+        <div class="ios-empty-icon">📝</div>
+        <div class="ios-empty-title">还没有记录</div>
+        <div class="ios-empty-text">选择餐厅菜品后点击"打卡"来记录</div>
       </div>
     </div>
     
-    <!-- Detail Modal -->
-    <div class="detail-modal" v-if="selectedRestaurant">
-      <div class="detail-header">
-        <div class="detail-back" @click="closeDetail">← 返回</div>
-        <div class="detail-home" @click="closeDetail;activeTab='main'">🏠 首页</div>
-        <div class="detail-title">
-          <span>{{selectedRestaurant.emoji}}</span>
-          <span>{{selectedRestaurant.name}}</span>
-        </div>
+    <div class="ios-footer" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.length}} 家餐厅</div>
+    <div class="ios-footer" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.length}} 家</div>
+    <div class="ios-footer" v-if="activeTab==='checkins'">共 {{checkinHistory.length}} 条记录</div>
+    
+    <!-- FAB -->
+    <div class="ios-fab" @click="openSlotMachine">🎰</div>
+    
+    <!-- Bottom Sheet Detail -->
+    <div class="ios-sheet-overlay" :class="{show:selectedRestaurant}" @click="closeDetail"></div>
+    <div class="ios-sheet" :class="{show:selectedRestaurant}">
+      <div class="ios-sheet-handle"></div>
+      <div class="ios-sheet-header">
+        <div class="ios-sheet-close" @click="closeDetail">关闭</div>
+        <div class="ios-sheet-title">{{selectedRestaurant?.name}}</div>
+        <div class="ios-sheet-close" @click="closeDetail;activeTab='main'" style="color:var(--ios-blue)">首页</div>
       </div>
-      <div class="detail-body">
-        <div class="detail-meta">
-          <div class="detail-meta-item">
-            <div class="detail-meta-value">{{'⭐'.repeat(selectedRestaurant.rating)}}</div>
-            <div class="detail-meta-label">减脂友好度</div>
-          </div>
-          <div class="detail-meta-item">
-            <div class="detail-meta-value">¥{{selectedRestaurant.price}}</div>
-            <div class="detail-meta-label">人均</div>
-          </div>
-          <div class="detail-meta-item">
-            <div class="detail-meta-value" style="font-size:13px">{{selectedRestaurant.cuisine}}</div>
-            <div class="detail-meta-label">菜系</div>
-          </div>
+      <div class="ios-sheet-body" v-if="selectedRestaurant">
+        <!-- Big Calorie Display -->
+        <div class="ios-metric" :class="{danger:totalCalories>500}">
+          <div class="ios-metric-value">{{totalCalories}}</div>
+          <div class="ios-metric-label">已选热量 (kcal)</div>
         </div>
         
         <!-- Favorite Button -->
-        <div style="margin-bottom:16px">
-          <button class="checkin-btn" :style="{background:isFavorite(selectedRestaurant)?'#F44336':'#00BCD4'}" @click="toggleFavorite(selectedRestaurant)">
-            {{isFavorite(selectedRestaurant)?'❤️ 已收藏':'🤍 收藏餐厅'}}
-          </button>
-        </div>
-        
-        <!-- Calorie Counter -->
-        <div class="calorie-counter" :class="{danger:selectedCalories>500}">
-          <div class="calorie-counter-title">已选热量</div>
-          <div><span class="calorie-counter-value">{{selectedCalories}}</span> <span class="calorie-counter-unit">kcal</span></div>
-          <div class="calorie-counter-tip" v-if="selectedCalories===0">👆 点击下方菜品来选择</div>
-          <div class="calorie-counter-tip" v-else-if="selectedCalories<=300">✅ 热量控制得不错！</div>
-          <div class="calorie-counter-tip" v-else-if="selectedCalories<=500">⚠️ 热量略高，注意控制</div>
-          <div class="calorie-counter-tip" v-else>❌ 热量超标，建议减少选择</div>
-        </div>
+        <button class="ios-btn" :style="{background:isFavorite(selectedRestaurant)?'var(--ios-red)':'var(--ios-blue)'" @click="toggleFavorite(selectedRestaurant)">
+          {{isFavorite(selectedRestaurant)?'❤️ 已收藏':'🤍 收藏餐厅'}}
+        </button>
         
         <!-- Recommended Foods -->
-        <div class="detail-section">
-          <div class="detail-section-title">✅ 低卡推荐菜（点击选择）</div>
-          <div class="food-grid">
-            <div class="food-card recommend" 
-                 :class="{selected:isFoodSelected(food)}" 
-                 v-for="(food, idx) in parseFoods(selectedRestaurant.recommend)" 
-                 :key="'rec-'+idx"
-                 @click="toggleFood(food)">
-              <div class="food-check" v-if="isFoodSelected(food)">✓</div>
-              <div class="food-name">{{food.name}}</div>
-              <div class="food-cal">{{food.cal}}</div>
+        <div class="ios-section">
+          <div class="ios-section-header">✅ 低卡推荐</div>
+          <div class="ios-grid">
+            <div class="ios-grid-card good" :class="{selected:isFoodSelected(food)}" v-for="(food, idx) in parseFoods(selectedRestaurant.recommend)" :key="'rec-'+idx" @click="toggleFood(food)">
+              <div class="ios-grid-check" v-if="isFoodSelected(food)">✓</div>
+              <div class="ios-grid-title">{{food.name}}</div>
+              <div class="ios-grid-badge">{{food.cal}}</div>
             </div>
           </div>
         </div>
         
         <!-- Avoid Foods -->
-        <div class="detail-section">
-          <div class="detail-section-title">🚫 减脂期避免（点击选择）</div>
-          <div class="food-grid">
-            <div class="food-card avoid" 
-                 :class="{selected:isFoodSelected(food)}" 
-                 v-for="(food, idx) in parseFoods(selectedRestaurant.avoid)" 
-                 :key="'avoid-'+idx"
-                 @click="toggleFood(food)">
-              <div class="food-check" v-if="isFoodSelected(food)">✓</div>
-              <div class="food-name">{{food.name}}</div>
-              <div class="food-cal">{{food.cal}}</div>
+        <div class="ios-section">
+          <div class="ios-section-header">🚫 减脂避免</div>
+          <div class="ios-grid">
+            <div class="ios-grid-card bad" :class="{selected:isFoodSelected(food)}" v-for="(food, idx) in parseFoods(selectedRestaurant.avoid)" :key="'avoid-'+idx" @click="toggleFood(food)">
+              <div class="ios-grid-check" v-if="isFoodSelected(food)">✓</div>
+              <div class="ios-grid-title">{{food.name}}</div>
+              <div class="ios-grid-badge">{{food.cal}}</div>
             </div>
           </div>
         </div>
         
         <!-- Tips -->
-        <div class="detail-section">
-          <div class="detail-section-title">💡 减脂建议</div>
-          <div class="tips-box">{{selectedRestaurant.tips}}</div>
+        <div class="ios-section">
+          <div class="ios-section-header">💡 减脂建议</div>
+          <div class="ios-info">{{selectedRestaurant.tips}}</div>
+        </div>
+        
+        <!-- Custom Food -->
+        <div class="ios-section">
+          <div class="ios-section-header">🍽️ 自定义菜品</div>
+          <div class="ios-input-group">
+            <div class="ios-input-row">
+              <span class="ios-input-label">菜品</span>
+              <input class="ios-input-field" v-model="customFoodText" @input="onCustomFoodInput" placeholder="输入菜品名称...">
+            </div>
+            <div class="ios-input-row" v-if="customFoodText">
+              <span class="ios-input-label">卡路里</span>
+              <input class="ios-input-field" v-model="customFoodManualCal" type="number" placeholder="输入数值">
+              <button class="ios-btn" style="width:auto;margin:0;padding:8px 16px;font-size:15px" @click="addCustomFoodHint">添加</button>
+            </div>
+          </div>
+          
+          <div class="ios-suggestions" v-if="customFoodHints.length>0">
+            <div class="ios-suggestion-item" v-for="hint in customFoodHints" :key="hint.name" @click="selectCustomHint(hint)">
+              <span class="ios-suggestion-name">{{hint.name}}</span>
+              <span class="ios-suggestion-cal">{{hint.cal}} kcal</span>
+            </div>
+          </div>
+          
+          <div class="ios-tags" v-if="customFoods.length>0">
+            <div class="ios-tag" v-for="(food,idx) in customFoods" :key="idx">
+              {{food.name}} {{food.cal}}
+              <span class="ios-tag-remove" @click="removeCustomFood(idx)">×</span>
+            </div>
+          </div>
         </div>
         
         <!-- Checkin Button -->
-        <button class="checkin-btn" :disabled="selectedFoods.length===0" @click="doCheckin">
-          📝 打卡（{{selectedFoods.length}}道菜 {{selectedCalories}}kcal）
+        <button class="ios-btn" :disabled="selectedFoods.length===0 && customFoods.length===0" @click="doCheckin">
+          打卡 ({{selectedFoods.length + customFoods.length}}道菜 · {{totalCalories}}kcal)
         </button>
+      </div>
+    </div>
+    
+    <!-- Slot Machine Modal -->
+    <div class="ios-modal-overlay" :class="{show:showSlot}" @click.self="closeSlotMachine">
+      <div class="ios-modal">
+        <div class="ios-modal-header">
+          <div class="ios-modal-title">🎰 今日运势</div>
+          <div class="ios-modal-subtitle">{{todayStr}}</div>
+        </div>
+        <div class="ios-modal-body">
+          <div class="ios-fortune">
+            <div class="ios-fortune-icon">{{fortuneIcon}}</div>
+            <div class="ios-fortune-text">{{fortuneText}}</div>
+          </div>
+          <div class="ios-slot">
+            <div class="ios-slot-content" v-if="!slotResult">🎲</div>
+            <div class="ios-slot-content" v-else>
+              <span class="ios-slot-emoji">{{slotResult.emoji}}</span>
+              <span>{{slotResult.name}}</span>
+            </div>
+          </div>
+          <button class="ios-modal-btn" @click="spinSlot" :disabled="isSpinning">{{isSpinning?'转动中...':(slotResult?'再来一次':'开始抽取')}}</button>
+          <button class="ios-modal-btn secondary" v-if="slotResult" @click="viewSlotResult" style="background:var(--ios-green)">查看详情</button>
+          <button class="ios-modal-btn secondary" @click="closeSlotMachine">关闭</button>
+        </div>
       </div>
     </div>
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vant@4/lib/vant.min.js"></script>
+  <script src="data.js"></script>
   <script>
-    const {createApp,ref,computed,watch}=Vue;
-    const {Search,Tab,Tabs,Sticky,Toast}=vant;
+    const {createApp,ref,computed,onMounted}=Vue;
+    const {Search,Toast,Dialog}=vant;
     
-    const restaurants={main:[{id:1,name:'钱屋·炭火烧烤',emoji:'🥩',rating:5,price:398,cuisine:'日式烧肉',recommend:'和牛刺身~120kcal\n烤牛舌~140kcal\n烤蔬菜~50kcal\n海鲜烤物~100kcal\n牛小排~220kcal',avoid:'五花肉~350kcal\n烤肠~300kcal\n刷酱烤肉~250kcal\n石锅拌饭~600kcal',tips:'优先刺身和烤海鲜，牛舌等瘦肉部位，少刷酱，搭配烤蔬菜'},{id:2,name:'喜家德虾仁水饺',emoji:'🥟',rating:5,price:15.5,cuisine:'饺子',recommend:'虾仁水饺(8个)~320kcal\n素三鲜水饺~280kcal\n凉拌菜~60kcal',avoid:'煎饺~420kcal\n红油抄手~450kcal\n炸酱面~550kcal',tips:'水饺煮制比煎饺健康，虾仁水饺蛋白优质'},{id:3,name:'八合里牛肉火锅',emoji:'🔥',rating:5,price:120,cuisine:'潮汕火锅',recommend:'鲜切牛肉~150kcal\n牛百叶~80kcal\n蔬菜拼盘~40kcal\n清汤锅底~20kcal',avoid:'麻辣锅底~150kcal\n炸豆皮~180kcal\n肥牛卷~300kcal',tips:'选清汤锅底，牛肉选瘦肉，蔬菜多下'},{id:4,name:'云锦壹号·淮扬宴',emoji:'🍲',rating:5,price:190,cuisine:'淮扬菜',recommend:'清炖狮子头(瘦)~280kcal\n大煮干丝~180kcal\n清蒸鱼~200kcal\n蔬菜~60kcal',avoid:'红烧肉~550kcal\n松鼠桂鱼~600kcal\n蟹黄豆腐~380kcal',tips:'选清炖狮子头(瘦版)、大煮干丝和清蒸鱼'},{id:5,name:'谷牛和牛烤肉',emoji:'🥩',rating:4,price:145,cuisine:'日式烤肉',recommend:'牛舌~140kcal\n牛小排(瘦)~200kcal\n烤蔬菜~50kcal\n海鲜~100kcal',avoid:'五花肉~350kcal\n牛肋条(肥)~300kcal\n刷酱肉~250kcal',tips:'选牛舌、牛小排等瘦肉，搭配烤蔬菜'},{id:6,name:'太二酸菜鱼',emoji:'🐟',rating:4,price:87,cuisine:'酸菜鱼',recommend:'酸菜鱼(少汤)~280kcal\n清蒸时蔬~60kcal\n凉拌黄瓜~40kcal',avoid:'酸菜鱼汤泡饭~450kcal\n油炸小酥肉~380kcal\n红糖糍粑~320kcal',tips:'酸菜鱼少喝汤，搭配清蒸时蔬'},{id:7,name:'一绪に寿喜烧',emoji:'🔥',rating:4,price:183,cuisine:'日式自助',recommend:'和牛刺身~120kcal\n海鲜(虾/扇贝)~80kcal\n蔬菜拼盘~30kcal\n寿喜烧牛肉~180kcal',avoid:'炸天妇罗~350kcal\n炸鸡块~400kcal\n芝士焗饭~500kcal',tips:'优先刺身海鲜区，蔬菜多拿'},{id:8,name:'湊湊火锅·茶憩',emoji:'🍲',rating:4,price:140,cuisine:'火锅',recommend:'清汤锅底~20kcal\n海鲜拼盘~200kcal\n鲜切牛肉~180kcal\n蔬菜~50kcal',avoid:'麻辣锅底~150kcal\n芝士丸~250kcal\n炸豆皮~180kcal',tips:'选清汤锅底，多下海鲜和蔬菜'},{id:9,name:'潮味狮头鹅',emoji:'🦆',rating:4,price:122,cuisine:'潮汕菜',recommend:'卤水鹅肉(去皮)~180kcal\n鹅肝(少量)~150kcal\n卤水豆腐~80kcal\n蔬菜~40kcal',avoid:'鹅皮~280kcal\n卤水饭~450kcal\n沙茶蘸料~100kcal',tips:'鹅肉去皮吃，多下蔬菜'},{id:10,name:'BAKER&SPICE',emoji:'🥗',rating:4,price:79,cuisine:'西餐',recommend:'沙拉(油醋汁)~250kcal\n三明治(烤鸡)~380kcal\n藜麦碗~320kcal',avoid:'奶油意面~600kcal\n芝士三明治~520kcal\n奶油浓汤~380kcal',tips:'选油醋汁沙拉、烤鸡三明治'},{id:11,name:'龙味馆·湘粤',emoji:'🥢',rating:4,price:114,cuisine:'粤菜馆',recommend:'清蒸鱼~200kcal\n白灼菜心~60kcal\n白切鸡(去皮)~180kcal\n蒸蛋~120kcal',avoid:'剁椒鱼头~480kcal\n小炒黄牛肉~380kcal\n红烧肉~550kcal',tips:'选粤式清蒸、白灼类'},{id:12,name:'米村拌饭',emoji:'🍚',rating:4,price:31,cuisine:'快餐简餐',recommend:'石锅拌饭(少酱)~480kcal\n蔬菜拌饭~380kcal\n煎蛋~90kcal\n金枪鱼拌饭~420kcal',avoid:'芝士拌饭~600kcal\n五花肉拌饭~650kcal\n炸猪排拌饭~700kcal',tips:'选蔬菜拌饭少酱'},{id:13,name:'江边城外烤全鱼',emoji:'🐟',rating:4,price:89,cuisine:'烤鱼',recommend:'烤鱼(香辣少油)~350kcal\n清蒸鱼~200kcal\n蔬菜~60kcal\n蒜香烤鱼~380kcal',avoid:'烤鱼(重油)~550kcal\n炸鱼皮~380kcal\n干锅配菜~350kcal',tips:'选香辣少油，多下蔬菜'},{id:14,name:'囍越越南餐厅',emoji:'🍜',rating:4,price:69,cuisine:'越南菜',recommend:'越南粉(清汤)~350kcal\n春卷(鲜虾)~180kcal\n凉拌米粉~280kcal',avoid:'炸春卷~350kcal\n咖喱饭~600kcal\n炸鸡翅~380kcal',tips:'选清汤粉类和鲜虾春卷'},{id:15,name:'新发现',emoji:'🥗',rating:4,price:70,cuisine:'浙菜',recommend:'清蒸鱼~200kcal\n凉拌菜~80kcal\n白灼菜心~60kcal\n蒸蛋~120kcal',avoid:'糖醋排骨~500kcal\n东坡肉~600kcal\n油焖大虾~450kcal',tips:'多选清蒸、凉拌类'},{id:16,name:'泷川深夜食堂',emoji:'🍣',rating:4,price:100,cuisine:'日本料理',recommend:'刺身拼盘~180kcal\n烤秋刀鱼~200kcal\n茶碗蒸~120kcal\n味噌汤~60kcal',avoid:'炸猪排~550kcal\n炸天妇罗~400kcal\n炸鸡块~450kcal',tips:'选刺身、烤鱼和茶碗蒸'},{id:17,name:'萨莉亚意式餐厅',emoji:'🍝',rating:4,price:50,cuisine:'意大利菜',recommend:'烤鸡~280kcal\n沙拉(油醋汁)~180kcal\n番茄意面~420kcal',avoid:'奶油意面~600kcal\n芝士焗饭~550kcal\n炸鸡翅~400kcal',tips:'选沙拉、烤鸡或番茄意面'},{id:18,name:'肥汁米兰米线',emoji:'🍜',rating:4,price:40,cuisine:'米线',recommend:'香港米线(清汤)~380kcal\n蔬菜米线~320kcal\n瘦肉米线~400kcal',avoid:'肥汁米线~550kcal\n肥肠米线~600kcal\n炸蛋~180kcal',tips:'选清汤米线'},{id:19,name:'立方铁铁板烧',emoji:'🍗',rating:4,price:96,cuisine:'铁板烧',recommend:'铁板蔬菜~150kcal\n鸡胸肉~200kcal\n铁板海鲜~180kcal\n铁板牛肉~350kcal',avoid:'铁板五花肉~450kcal\n芝士焗饭~600kcal',tips:'选铁板蔬菜、鸡胸肉和海鲜'},{id:20,name:'小杨生煎',emoji:'🥟',rating:4,price:26,cuisine:'生煎',recommend:'鲜肉生煎(4个)~320kcal\n蔬菜生煎~280kcal\n小馄饨~280kcal',avoid:'虾仁生煎~400kcal\n双拼生煎~450kcal',tips:'选鲜肉或蔬菜生煎'},{id:21,name:'小女当家',emoji:'🍚',rating:4,price:38,cuisine:'快餐简餐',recommend:'蒸蛋~120kcal\n清炒时蔬~80kcal\n白灼虾~150kcal\n蒸鱼~180kcal',avoid:'红烧肉~450kcal\n糖醋里脊~400kcal\n油炸鸡排~380kcal',tips:'多选蒸蛋、蒸鱼和白灼虾'},{id:22,name:'小江溪·江西菜',emoji:'🍜',rating:4,price:69,cuisine:'江西菜',recommend:'江西炒米粉(少油)~450kcal\n清炒时蔬~100kcal\n蒸蛋~120kcal',avoid:'辣子鸡~500kcal\n红烧肉~550kcal',tips:'炒米粉要求少油'},{id:23,name:'町田商店拉面',emoji:'🍜',rating:4,price:42,cuisine:'日式拉面',recommend:'清汤拉面~450kcal\n叉烧(瘦)~150kcal\n溏心蛋~70kcal',avoid:'浓厚豚骨~650kcal\n炸鸡块~380kcal',tips:'选清汤底，少喝汤'},{id:24,name:'主老大湘菜',emoji:'🥢',rating:4,price:69,cuisine:'湘菜',recommend:'辣椒炒肉(少油)~320kcal\n蒸蛋~120kcal\n清炒时蔬~100kcal',avoid:'剁椒鱼头~480kcal\n干锅肥肠~450kcal',tips:'辣椒炒肉选少油瘦肉'},{id:25,name:'煲仔皇',emoji:'🍳',rating:4,price:39,cuisine:'煲仔饭',recommend:'瘦肉煲仔饭~480kcal\n滑鸡煲仔饭~500kcal',avoid:'腊肠煲仔饭~650kcal\n五花肉煲仔饭~700kcal',tips:'选瘦肉或滑鸡，少吃锅巴'},{id:26,name:'嘻小北牛肉面',emoji:'🍜',rating:4,price:37,cuisine:'面馆',recommend:'牛肉面(清汤)~420kcal\n蔬菜~40kcal',avoid:'红烧牛肉面~550kcal\n油炸面~500kcal',tips:'选清汤牛肉面'},{id:27,name:'关东小磨东北菜',emoji:'🥢',rating:4,price:66,cuisine:'东北菜',recommend:'小鸡炖蘑菇(去皮)~380kcal\n炖菜~300kcal\n凉拌菜~80kcal',avoid:'锅包肉~550kcal\n地三鲜~450kcal',tips:'选炖菜和凉拌类'},{id:28,name:'麦当劳',emoji:'🍔',rating:4,price:25,cuisine:'西式快餐',recommend:'麦辣鸡腿堡(去皮)~450kcal\n沙拉~150kcal\n烤鸡腿堡~420kcal',avoid:'巨无霸~550kcal\n薯条(大)~380kcal',tips:'选烤鸡堡或沙拉，汉堡去皮'},{id:29,name:'肯德基 KFC',emoji:'🍗',rating:4,price:30,cuisine:'西式快餐',recommend:'烤鸡腿堡~420kcal\n沙拉~150kcal\n烤鸡翅~280kcal',avoid:'炸鸡全家桶~1200kcal\n薯条(大)~400kcal',tips:'选烤鸡堡、沙拉或烤鸡翅'},{id:30,name:'阿不就台湾食堂',emoji:'🍱',rating:4,price:42,cuisine:'台湾菜',recommend:'卤肉饭(瘦肉)~480kcal\n卤蛋~70kcal\n烫青菜~60kcal',avoid:'卤肉饭(肥肉)~600kcal\n炸鸡排~450kcal',tips:'卤肉饭选瘦肉版'},{id:31,name:'大米先生',emoji:'🍚',rating:4,price:30,cuisine:'湘菜',recommend:'自选蔬菜~80kcal\n蒸蛋~120kcal\n白切鸡~180kcal',avoid:'红烧肉~450kcal\n油焖茄子~320kcal',tips:'多选蔬菜和蒸蛋'},{id:32,name:'俏阿妮米线',emoji:'🍜',rating:4,price:31,cuisine:'米线',recommend:'生烫牛肉米线~380kcal\n蔬菜米线~320kcal',avoid:'肥肠米线~550kcal\n油辣子米线~480kcal',tips:'选清汤米线'},{id:33,name:'胡子大厨湘菜',emoji:'🌶️',rating:4,price:48,cuisine:'湘菜',recommend:'小炒肉(瘦肉)~320kcal\n青椒肉丝~280kcal\n蔬菜~80kcal',avoid:'小炒肉(肥)~450kcal\n辣子鸡~500kcal',tips:'小炒肉选瘦肉'},{id:34,name:'遇见小面',emoji:'🍜',rating:4,price:28,cuisine:'面馆',recommend:'清汤面~320kcal\n蔬菜面~280kcal',avoid:'红油面~480kcal\n肥肠面~550kcal',tips:'选清汤面'},{id:35,name:'Taco Bell',emoji:'🌮',rating:4,price:31,cuisine:'西式快餐',recommend:'鸡肉塔可~220kcal\n沙拉~250kcal',avoid:'炸鸡塔可~380kcal\n芝士Nachos~500kcal',tips:'选烤鸡肉塔可'},{id:36,name:'盖帮主盖码饭',emoji:'🍚',rating:4,price:32,cuisine:'盖饭',recommend:'青椒肉丝盖饭~450kcal\n蔬菜盖饭~380kcal',avoid:'红烧肉盖饭~650kcal\n辣子鸡盖饭~600kcal',tips:'选蔬菜盖饭，要求少汁'},{id:37,name:'潮林卤鹅肉饭',emoji:'🍚',rating:4,price:35,cuisine:'快餐简餐',recommend:'鹅肉饭(去皮)~450kcal\n烫青菜~60kcal',avoid:'鹅皮饭~600kcal\n肥鹅肉饭~550kcal',tips:'鹅肉去皮吃'},{id:38,name:'米陀饭团',emoji:'🍙',rating:4,price:17,cuisine:'小吃快餐',recommend:'饭团(非油炸)~280kcal\n瘦肉饭团~250kcal\n蔬菜饭团~220kcal',avoid:'油炸饭团~400kcal\n肥肉饭团~350kcal',tips:'选非油炸饭团'},{id:39,name:'蚝大胆顺德菜',emoji:'🥩',rating:3,price:80,cuisine:'顺德菜',recommend:'干蒸排骨(瘦)~280kcal\n蒸鱼~200kcal\n白灼虾~150kcal',avoid:'炸排骨~450kcal\n红烧肉~550kcal',tips:'选干蒸排骨(少油)'},{id:40,name:'家府潮汕菜',emoji:'🥢',rating:3,price:85,cuisine:'潮汕菜',recommend:'牛肉火锅(清汤)~350kcal\n牛肉丸(瘦)~120kcal\n蔬菜~40kcal',avoid:'卤味拼盘~450kcal\n炸粿肉~380kcal',tips:'选清汤牛肉火锅'},{id:41,name:'福鼓河豚蟹料理',emoji:'🍣',rating:3,price:280,cuisine:'日本料理',recommend:'河豚刺身~180kcal\n蟹肉刺身~120kcal\n烤蟹腿~150kcal',avoid:'炸河豚~400kcal\n天妇罗~350kcal',tips:'首选刺身和烤蟹腿'},{id:42,name:'眉州东坡川菜',emoji:'🌶️',rating:3,price:95,cuisine:'川菜',recommend:'蒜泥白肉(瘦)~280kcal\n白灼菜心~60kcal\n清蒸鱼~200kcal',avoid:'水煮鱼~550kcal\n回锅肉~500kcal',tips:'选蒜泥白肉和清蒸'},{id:43,name:'纯味斑鱼府',emoji:'🐟',rating:3,price:110,cuisine:'鱼火锅',recommend:'斑鱼火锅(清汤)~280kcal\n鱼片(瘦)~150kcal',avoid:'麻辣锅底~200kcal\n炸鱼皮~320kcal',tips:'选清汤锅底'},{id:44,name:'石膳家石锅拌饭',emoji:'🍚',rating:3,price:45,cuisine:'韩式料理',recommend:'石锅拌饭(少酱)~380kcal\n蔬菜拌饭~320kcal',avoid:'芝士拌饭~550kcal\n五花肉拌饭~650kcal',tips:'选蔬菜拌饭少酱'},{id:45,name:'老碗会陕西面',emoji:'🍜',rating:3,price:35,cuisine:'西北菜',recommend:'羊肉汤面(清汤)~420kcal\n凉皮(少辣)~350kcal',avoid:'油泼面~550kcal\n炸酱面~500kcal',tips:'选清汤面或凉皮少油'},{id:46,name:'塔哈尔新疆菜',emoji:'🥙',rating:3,price:88,cuisine:'新疆菜',recommend:'羊肉串(瘦)~150kcal\n烤馕(小份)~200kcal',avoid:'烤包子~380kcal\n丁丁炒面~500kcal',tips:'大盘鸡去皮吃'},{id:47,name:'锅气湖南菜',emoji:'🌶️',rating:3,price:65,cuisine:'湘菜',recommend:'辣椒炒肉(瘦)~300kcal\n蒸蛋~120kcal',avoid:'剁椒鱼头~480kcal\n干锅肥肠~450kcal',tips:'选瘦肉少油'},{id:48,name:'京悦荟融合菜',emoji:'🥢',rating:3,price:120,cuisine:'融合菜',recommend:'北京烤鸭(去皮)~350kcal\n清蒸鱼~200kcal',avoid:'烤鸭(带皮)~500kcal\n炸灌肠~350kcal',tips:'烤鸭去皮吃'},{id:49,name:'嘉美尚品粤菜',emoji:'🦐',rating:3,price:150,cuisine:'粤菜',recommend:'虾饺皇(3个)~180kcal\n清蒸鲈鱼~200kcal\n白灼虾~150kcal',avoid:'叉烧包~350kcal\n蛋挞~280kcal',tips:'选虾饺和清蒸'},{id:50,name:'达美乐比萨',emoji:'🍕',rating:3,price:55,cuisine:'比萨',recommend:'披萨(薄底小份)~400kcal\n烤鸡翅~250kcal',avoid:'披萨(厚底)~650kcal\n芝士披萨~700kcal',tips:'选薄底小份'},{id:51,name:"Kathleen's西餐",emoji:'🥩',rating:3,price:200,cuisine:'西餐',recommend:'烤鸡胸肉~200kcal\n牛排(瘦)~300kcal',avoid:'奶油意面~650kcal\n炸薯条~350kcal',tips:'选烤鸡胸和牛排'},{id:52,name:'海立阁江浙菜',emoji:'🦐',rating:3,price:180,cuisine:'江浙菜',recommend:'清蒸蟹~200kcal\n白灼虾~150kcal\n清蒸鱼~200kcal',avoid:'油爆虾~400kcal\n红烧肉~550kcal',tips:'选清蒸和白灼'},{id:53,name:'椒锅锅麻辣香锅',emoji:'🌶️',rating:3,price:42,cuisine:'香锅',recommend:'香锅(素菜为主)~350kcal\n鸡胸肉~150kcal',avoid:'香锅(五花肉)~550kcal\n炸鸡腿~400kcal',tips:'素菜为主加鸡胸'},{id:54,name:'Potato Corner',emoji:'🍟',rating:3,price:25,cuisine:'西式快餐',recommend:'迷你薯条(小份)~180kcal\n蔬菜条~50kcal',avoid:'大份薯条~400kcal\n芝士薯条~450kcal',tips:'选小份'},{id:55,name:'继光香香鸡',emoji:'🍗',rating:3,price:28,cuisine:'炸鸡',recommend:'香香鸡(去皮)~250kcal\n蔬菜~60kcal',avoid:'香香鸡(带皮)~380kcal\n炸鸡腿~400kcal',tips:'去皮吃'},{id:56,name:'麻源口江西米粉',emoji:'🍜',rating:3,price:26,cuisine:'快餐简餐',recommend:'牛肉米粉(清汤)~380kcal\n蔬菜米粉~300kcal',avoid:'肥肠米粉~550kcal\n炸酱米粉~480kcal',tips:'选清汤米粉'},{id:57,name:'满巍明生炸鸡',emoji:'🍗',rating:3,price:22,cuisine:'炸鸡',recommend:'生炸鸡架(小份)~200kcal\n炸鸡柳(小份)~180kcal',avoid:'全家福~450kcal\n炸鸡腿~400kcal',tips:'选小份'},{id:58,name:'馋三尺蟹粉小笼',emoji:'🥟',rating:3,price:45,cuisine:'小笼',recommend:'蟹粉小笼(4个)~320kcal\n鲜肉小笼(4个)~280kcal',avoid:'油炸小笼~420kcal\n炸春卷~350kcal',tips:'选蒸制小笼'},{id:59,name:'可可牛牛肉饭',emoji:'🍚',rating:3,price:38,cuisine:'快餐简餐',recommend:'卤牛肉饭(瘦肉)~450kcal\n卤蛋~70kcal',avoid:'卤肉饭(肥肉)~600kcal\n炸猪排~450kcal',tips:'选瘦肉版'},{id:60,name:'老碗会陕西面',emoji:'🍜',rating:3,price:35,cuisine:'西北菜',recommend:'羊肉汤面(清汤)~420kcal',avoid:'油泼面~550kcal',tips:'选清汤面'}],drinks:[{id:101,name:'柠季手打柠檬茶',emoji:'🍵',rating:5,price:15,cuisine:'茶饮果汁',recommend:'手打柠檬茶(无糖)~60kcal\n茉莉柠檬(少糖)~80kcal\n鸭屎香柠檬茶(少糖)~100kcal',avoid:'柠檬茶(全糖)~180kcal\n芝士柠檬茶~250kcal',tips:'无糖或少糖柠檬茶'},{id:102,name:'煲珠公奶茶',emoji:'🧋',rating:5,price:14,cuisine:'茶饮果汁',recommend:'珍珠奶茶(无糖)~180kcal\n老红糖奶茶(少糖)~160kcal\n纯茶~30kcal',avoid:'珍珠奶茶(全糖)~280kcal\n布丁奶茶~300kcal',tips:'无糖少冰'},{id:103,name:'淡马茶坊',emoji:'🧋',rating:4,price:22,cuisine:'茶饮果汁',recommend:'黄皮水(少糖)~100kcal\n柠檬茶(无糖)~60kcal',avoid:'珍珠奶茶~350kcal\n芝士奶盖~300kcal',tips:'黄皮水少糖或柠檬茶无糖'},{id:104,name:'瑞幸咖啡',emoji:'☕',rating:4,price:13,cuisine:'咖啡',recommend:'美式~10kcal\n拿铁(无糖)~120kcal\n生椰拿铁(无糖)~165kcal',avoid:'陨石拿铁~300kcal\n焦糖玛奇朵~280kcal',tips:'首选美式或无糖拿铁'},{id:105,name:'BeanStar咖啡',emoji:'☕',rating:4,price:19,cuisine:'咖啡',recommend:'美式~15kcal\n澳白(无糖)~100kcal',avoid:'焦糖拿铁~260kcal\n摩卡~320kcal',tips:'美式或无糖澳白'},{id:106,name:'LAVAZZA咖啡',emoji:'☕',rating:4,price:28,cuisine:'咖啡',recommend:'美式~15kcal\n拿铁(无糖)~120kcal\n冷萃~15kcal',avoid:'焦糖玛奇朵~280kcal\n摩卡~320kcal',tips:'美式或无糖拿铁'},{id:107,name:'喜茶',emoji:'🧋',rating:3,price:20,cuisine:'茶饮果汁',recommend:'椰椰芒芒(少糖)~150kcal\n多肉葡萄(少糖)~140kcal',avoid:'芋泥波波~300kcal\n芝士蛋糕奶茶~350kcal',tips:'选少糖款'},{id:108,name:'奈雪的茶',emoji:'🧋',rating:3,price:23,cuisine:'茶饮果汁',recommend:'霸气葡萄(少糖)~140kcal\n纯茶~30kcal',avoid:'芋泥宝藏茶~320kcal\n芝士蛋糕奶茶~350kcal',tips:'选少糖'},{id:109,name:'乐乐茶',emoji:'🧋',rating:3,price:22,cuisine:'茶饮果汁',recommend:'椰椰芒果(少糖)~150kcal\n满杯水果茶~120kcal',avoid:'芋泥波波~300kcal\n芝士蛋糕奶茶~350kcal',tips:'选少糖'},{id:110,name:'M Stand',emoji:'🥤',rating:4,price:40,cuisine:'茶饮果汁',recommend:'燕麦拿铁(无糖)~130kcal\n冷萃~15kcal',avoid:'太妃拿铁~320kcal\n摩卡~350kcal',tips:'冷萃或无糖燕麦'},{id:111,name:'星巴克',emoji:'☕',rating:4,price:38,cuisine:'咖啡',recommend:'美式(无糖)~15kcal\n冷萃~15kcal',avoid:'星冰乐~450kcal\n焦糖玛奇朵~280kcal',tips:'首选美式或冷萃'},{id:112,name:'Blueglass酸奶',emoji:'🥛',rating:4,price:35,cuisine:'酸奶鲜奶',recommend:'原味酸奶~100kcal\n益生菌系列~90kcal',avoid:'果味酸奶~180kcal\n奥利奥酸奶~250kcal',tips:'选原味或益生菌'},{id:113,name:'Manner Coffee',emoji:'☕',rating:4,price:20,cuisine:'咖啡',recommend:'美式~15kcal\n澳白(无糖)~100kcal',avoid:'焦糖拿铁~260kcal\n摩卡~320kcal',tips:'美式或无糖澳白'},{id:114,name:'霸王茶姬',emoji:'🥤',rating:4,price:20,cuisine:'茶饮果汁',recommend:'伯牙绝弦(三分糖)~150kcal\n茉莉奶绿(无糖)~80kcal',avoid:'芝士奶盖~350kcal\n全糖奶茶~280kcal',tips:'无糖或三分糖'},{id:115,name:'茉莉奶白',emoji:'🥤',rating:4,price:19,cuisine:'茶饮果汁',recommend:'茉莉清茶~50kcal\n白桃乌龙~120kcal',avoid:'芝士奶盖款~340kcal\n全糖奶茶~280kcal',tips:'选清茶'},{id:116,name:'茉酸奶',emoji:'🥛',rating:4,price:24,cuisine:'酸奶鲜奶',recommend:'原味酸奶~90kcal\n低卡系列~80kcal',avoid:'草莓芝士~220kcal\n巧克力酸奶~280kcal',tips:'选原味低卡'},{id:117,name:'DQ冰淇淋',emoji:'🍦',rating:4,price:28,cuisine:'冰淇淋',recommend:'甜筒(小份)~180kcal\n冰淇淋(小杯)~200kcal',avoid:'暴风雪系列~450kcal\n蛋糕冰淇淋~600kcal',tips:'选小份'},{id:118,name:'椿风养生茶饮',emoji:'🍵',rating:4,price:18,cuisine:'茶饮果汁',recommend:'草本茶~10kcal\n鲜果茶(无糖)~60kcal',avoid:'珍珠奶茶~350kcal\n芝士奶盖茶~380kcal',tips:'选无糖果茶'},{id:119,name:'Yee3椰子炒冰',emoji:'🥥',rating:4,price:19,cuisine:'冰淇淋',recommend:'椰子炒冰~180kcal\n原味椰子水~45kcal',avoid:'加料款~250kcal\n巧克力风味~280kcal',tips:'选原味'},{id:120,name:'匡朵裸蛋糕',emoji:'🧊',rating:4,price:31,cuisine:'甜品',recommend:'切片蛋糕(小份)~280kcal\n裸蛋糕(少奶油)~250kcal',avoid:'整块蛋糕~800kcal\n奶油蛋糕~450kcal',tips:'选小份切片'},{id:121,name:'朴下隆九',emoji:'🍞',rating:2,price:25,cuisine:'面包蛋糕',recommend:'全麦面包(小份)~150kcal\n贝果~180kcal\n蔬菜沙拉~120kcal',avoid:'丹麦酥~350kcal\n奶油面包~300kcal\n可颂~380kcal',tips:'选全麦或贝果'},{id:122,name:'薛记炒货',emoji:'🌰',rating:2,price:30,cuisine:'栗子干果',recommend:'栗子(小份)~150kcal\n核桃(小份)~180kcal',avoid:'焦糖瓜子~200kcal\n奶香夏威夷果~300kcal',tips:'选小份'},{id:123,name:'琦王花生',emoji:'🌰',rating:2,price:20,cuisine:'栗子干果',recommend:'栗子(小份)~150kcal\n核桃~180kcal',avoid:'糖炒栗子~200kcal\n油炸花生~250kcal',tips:'选小份原味'},{id:124,name:'UH祐禾',emoji:'🍞',rating:2,price:38,cuisine:'面包蛋糕',recommend:'全麦吐司(小份)~150kcal\n贝果~180kcal',avoid:'肉松面包~350kcal\n奶油面包~300kcal',tips:'选全麦吐司'},{id:125,name:'派悦坊蛋糕',emoji:'🍰',rating:2,price:47,cuisine:'甜品',recommend:'迷你蛋糕~200kcal\n水果蛋糕~250kcal',avoid:'大份蛋糕~500kcal\n奶油蛋糕~450kcal',tips:'选迷你蛋糕'},{id:126,name:'野人先生Gelato',emoji:'🍦',rating:2,price:30,cuisine:'冰淇淋',recommend:'冰淇淋(小份)~150kcal\n水果口味~120kcal',avoid:'大份冰淇淋~350kcal\n巧克力口味~200kcal',tips:'选小份水果味'}]};
-    
-    // 本地存储keys
     const FAV_KEY='fatloss_favorites';
     const CHECKIN_KEY='fatloss_checkins';
+    const THEME_KEY='fatloss_theme';
+    const SLOT_KEY='SLOT_DAILY_';
     
     createApp({
-      components:{[Search.name]:Search,[Tab.name]:Tab,[Tabs.name]:Tabs,[Sticky.name]:Sticky},
+      components:{[Search.name]:Search},
       setup(){
+        // Theme
+        const isDark=ref(false);
+        const toggleTheme=()=>{
+          isDark.value=!isDark.value;
+          document.body.setAttribute('data-theme',isDark.value?'dark':'light');
+          localStorage.setItem(THEME_KEY,isDark.value?'dark':'light');
+        };
+        
+        onMounted(()=>{
+          const saved=localStorage.getItem(THEME_KEY);
+          if(saved==='dark'){
+            isDark.value=true;
+            document.body.setAttribute('data-theme','dark');
+          }
+        });
+        
+        // State
         const activeTab=ref('main');
         const searchText=ref('');
         const currentRating=ref(0);
@@ -378,7 +919,67 @@
         const favorites=ref(JSON.parse(localStorage.getItem(FAV_KEY)||'[]'));
         const checkinHistory=ref(JSON.parse(localStorage.getItem(CHECKIN_KEY)||'[]'));
         
-        const currentList=computed(()=>activeTab.value==='main'?restaurants.main:activeTab.value==='drinks'?restaurants.drinks:[]);
+        // Custom Food
+        const customFoodText=ref('');
+        const customFoodHints=ref([]);
+        const customFoods=ref([]);
+        const customFoodManualCal=ref('');
+        
+        // Calorie DB
+        const calorieDB={
+          '鸡腿':'180','鸡胸肉':'150','鸡翅':'200','牛肉':'150','牛排':'280',
+          '虾':'100','鱼':'120','清蒸鱼':'150','青菜':'50','蔬菜':'40',
+          '米饭':'230','面条':'280','饺子':'80','汉堡':'350','披萨':'280',
+          '奶茶':'300','拿铁':'150','美式':'10','可乐':'140','酸奶':'100',
+          '薯条':'320','炸鸡':'380','沙拉':'150','蛋':'80','鸡蛋':'80'
+        };
+        
+        const onCustomFoodInput=()=>{
+          const text=customFoodText.value.trim().toLowerCase();
+          if(!text){customFoodHints.value=[];return;}
+          const hints=[];
+          for(const[name,cal]of Object.entries(calorieDB)){
+            if(name.includes(text)||text.includes(name)){
+              hints.push({name,cal});
+              if(hints.length>=5)break;
+            }
+          }
+          customFoodHints.value=hints;
+        };
+        
+        const selectCustomHint=(hint)=>{
+          customFoods.value=[...customFoods.value,{name:hint.name,cal:hint.cal+'kcal'}];
+          customFoodText.value='';
+          customFoodHints.value=[];
+          Toast.success(`已添加：${hint.name}`);
+        };
+        
+        const addCustomFoodHint=()=>{
+          const name=customFoodText.value.trim();
+          if(!name){Toast('请输入菜品名称');return;}
+          let cal=customFoodManualCal.value.trim();
+          if(!cal){
+            for(const[n,c]of Object.entries(calorieDB)){
+              if(name.includes(n)||n.includes(name)){cal=c;break;}
+            }
+            if(!cal){Toast('请输入卡路里');return;}
+          }
+          customFoods.value=[...customFoods.value,{name,cal:cal+'kcal'}];
+          customFoodText.value='';
+          customFoodHints.value=[];
+          customFoodManualCal.value='';
+          Toast.success(`已添加：${name}`);
+        };
+        
+        const removeCustomFood=(idx)=>{customFoods.value.splice(idx,1);};
+        
+        const totalCalories=computed(()=>{
+          const base=selectedFoods.value.reduce((sum,f)=>sum+(parseInt(f.cal)||0),0);
+          const custom=customFoods.value.reduce((sum,f)=>sum+(parseInt(f.cal)||0),0);
+          return base+custom;
+        });
+        
+        const currentList=computed(()=>activeTab.value==='main'?restaurants.main:restaurants.drinks);
         
         const filteredRestaurants=computed(()=>{
           let list=currentList.value;
@@ -390,25 +991,14 @@
           return list;
         });
         
-        const favoriteRestaurants=computed(()=>{
-          return favorites.value.map(id=>{
-            const r=restaurants.main.find(x=>x.id===id)||restaurants.drinks.find(x=>x.id===id);
-            return r;
-          }).filter(x=>x);
-        });
-        
-        const selectedCalories=computed(()=>{
-          return selectedFoods.value.reduce((sum,f)=>{
-            const cal=parseInt(f.cal.replace('kcal','').replace('/份',''))||0;
-            return sum+cal;
-          },0);
-        });
+        const favoriteRestaurants=computed(()=>favorites.value.map(id=>{
+          return restaurants.main.find(x=>x.id===id)||restaurants.drinks.find(x=>x.id===id);
+        }).filter(x=>x));
         
         // Slot Machine
         const showSlot=ref(false);
         const isSpinning=ref(false);
         const slotResult=ref(null);
-        const SLOT_KEY='SLOT_DAILY_';
         const todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'');
         
         const fortunes=[
@@ -421,20 +1011,16 @@
           {icon:'💧',text:'多喝水！每天2L水，提高代谢还能抑制食欲~'},
           {icon:'⏰',text:'16+8间歇性禁食了解一下？让身体进入燃脂模式！'},
         ];
+        
         const fortuneIcon=computed(()=>{
           const saved=localStorage.getItem(SLOT_KEY+todayStr);
-          if(saved){
-            const idx=parseInt(JSON.parse(saved).fortuneIdx);
-            return fortunes[idx].icon;
-          }
+          if(saved)return fortunes[JSON.parse(saved).fortuneIdx].icon;
           return fortunes[Math.floor(Math.random()*fortunes.length)].icon;
         });
+        
         const fortuneText=computed(()=>{
           const saved=localStorage.getItem(SLOT_KEY+todayStr);
-          if(saved){
-            const idx=parseInt(JSON.parse(saved).fortuneIdx);
-            return fortunes[idx].text;
-          }
+          if(saved)return fortunes[JSON.parse(saved).fortuneIdx].text;
           return fortunes[Math.floor(Math.random()*fortunes.length)].text;
         });
         
@@ -442,39 +1028,29 @@
           const saved=localStorage.getItem(SLOT_KEY+todayStr);
           if(saved){
             const data=JSON.parse(saved);
-            const r=restaurants.main.find(x=>x.id===data.restaurantId)||restaurants.drinks.find(x=>x.id===data.restaurantId);
-            slotResult.value=r||null;
-          }else{
-            slotResult.value=null;
-          }
+            slotResult.value=restaurants.main.find(x=>x.id===data.restaurantId)||restaurants.drinks.find(x=>x.id===data.restaurantId);
+          }else{slotResult.value=null;}
           showSlot.value=true;
         };
         const closeSlotMachine=()=>{showSlot.value=false;};
         
         const spinSlot=()=>{
           isSpinning.value=true;
-          const allRestaurants=[...restaurants.main,...restaurants.drinks];
-          let spinCount=0;
-          const totalSpins=20;
-          const spinInterval=setInterval(()=>{
-            const randomIdx=Math.floor(Math.random()*allRestaurants.length);
-            slotResult.value=allRestaurants[randomIdx];
-            spinCount++;
-            if(spinCount>=totalSpins){
-              clearInterval(spinInterval);
-              const finalIdx=Math.floor(Math.random()*allRestaurants.length);
-              slotResult.value=allRestaurants[finalIdx];
+          const all=[...restaurants.main,...restaurants.drinks];
+          let count=0;
+          const interval=setInterval(()=>{
+            slotResult.value=all[Math.floor(Math.random()*all.length)];
+            if(++count>=20){
+              clearInterval(interval);
               isSpinning.value=false;
-              // Save daily result
-              const fortuneIdx=Math.floor(Math.random()*fortunes.length);
               localStorage.setItem(SLOT_KEY+todayStr,JSON.stringify({
                 restaurantId:slotResult.value.id,
-                fortuneIdx:fortuneIdx,
-                date:todayStr
+                fortuneIdx:Math.floor(Math.random()*fortunes.length)
               }));
             }
           },80);
         };
+        
         const viewSlotResult=()=>{
           if(slotResult.value){
             closeSlotMachine();
@@ -482,32 +1058,30 @@
           }
         };
         
+        // Actions
         const onTabChange=()=>{searchText.value='';currentRating.value=0;};
         const filterByRating=(r)=>{currentRating.value=r;};
         
         const showDetail=(item)=>{
           selectedRestaurant.value=item;
           selectedFoods.value=[];
-          document.body.style.overflow='hidden';
+          customFoods.value=[];
         };
         const closeDetail=()=>{
           selectedRestaurant.value=null;
           selectedFoods.value=[];
-          document.body.style.overflow='';
+          customFoods.value=[];
         };
         
         const parseFoods=(text)=>{
           if(!text)return[];
           return text.split('\n').map(item=>{
             const parts=item.split('~');
-            return{name:parts[0]||'',cal:parts[1]||''};
+            return{name:parts[0]||'',cal:parseInt(parts[1])||0};
           });
         };
         
-        const isFoodSelected=(food)=>{
-          return selectedFoods.value.some(f=>f.name===food.name);
-        };
-        
+        const isFoodSelected=(food)=>selectedFoods.value.some(f=>f.name===food.name);
         const toggleFood=(food)=>{
           if(isFoodSelected(food)){
             selectedFoods.value=selectedFoods.value.filter(f=>f.name!==food.name);
@@ -516,45 +1090,33 @@
           }
         };
         
-        const isFavorite=(item)=>{
-          return favorites.value.includes(item.id);
-        };
-        
+        const isFavorite=(item)=>favorites.value.includes(item.id);
         const toggleFavorite=(item)=>{
           if(isFavorite(item)){
             favorites.value=favorites.value.filter(id=>id!==item.id);
             Toast('已取消收藏');
           }else{
             favorites.value.push(item.id);
-            Toast('已收藏！');
+            Toast.success('已收藏！');
           }
           localStorage.setItem(FAV_KEY,JSON.stringify(favorites.value));
         };
         
         const doCheckin=()=>{
-          if(selectedFoods.value.length===0)return;
           const now=new Date();
           const dateStr=`${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-          const checkin={
+          const allFoods=[...selectedFoods.value.map(f=>f.name),...customFoods.value.map(f=>f.name)];
+          checkinHistory.value.unshift({
             restaurantId:selectedRestaurant.value.id,
             restaurantName:selectedRestaurant.value.name,
             emoji:selectedRestaurant.value.emoji,
-            foods:selectedFoods.value.map(f=>f.name),
-            calories:selectedCalories.value,
+            foods:allFoods,
+            calories:totalCalories.value,
             date:dateStr
-          };
-          checkinHistory.value.unshift(checkin);
+          });
           localStorage.setItem(CHECKIN_KEY,JSON.stringify(checkinHistory.value));
-          Toast.success(`打卡成功！${selectedCalories.value}kcal`);
-          selectedFoods.value=[];
-          selectedRestaurant.value=null;
-          document.body.style.overflow='';
-        };
-        
-        const deleteCheckin=(idx)=>{
-          checkinHistory.value.splice(idx,1);
-          localStorage.setItem(CHECKIN_KEY,JSON.stringify(checkinHistory.value));
-          Toast('已删除');
+          Toast.success(`✅ 打卡成功！${totalCalories.value}kcal`);
+          setTimeout(()=>{closeDetail();},800);
         };
         
         const getRestaurantEmoji=(id)=>{
@@ -562,7 +1124,17 @@
           return r?r.emoji:'🍽️';
         };
         
-        return{activeTab,searchText,currentRating,selectedRestaurant,selectedFoods,favorites,favoriteRestaurants,checkinHistory,selectedCalories,currentList,filteredRestaurants,onTabChange,filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,isFavorite,toggleFavorite,doCheckin,deleteCheckin,getRestaurantEmoji,showSlot,isSpinning,slotResult,todayStr,fortuneIcon,fortuneText,openSlotMachine,closeSlotMachine,spinSlot,viewSlotResult};
+        return{
+          isDark,toggleTheme,
+          activeTab,searchText,currentRating,selectedRestaurant,selectedFoods,favorites,checkinHistory,
+          customFoodText,customFoodHints,customFoods,customFoodManualCal,
+          totalCalories,currentList,filteredRestaurants,favoriteRestaurants,
+          showSlot,isSpinning,slotResult,todayStr,fortuneIcon,fortuneText,
+          onTabChange,filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,
+          isFavorite,toggleFavorite,doCheckin,getRestaurantEmoji,
+          openSlotMachine,closeSlotMachine,spinSlot,viewSlotResult,
+          onCustomFoodInput,selectCustomHint,addCustomFoodHint,removeCustomFood
+        };
       }
     }).use(vant).mount('#app');
   </script>
