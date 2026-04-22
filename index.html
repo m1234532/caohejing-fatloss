@@ -63,7 +63,7 @@
       z-index: 9999;
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .splash-screen.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+    .splash-screen.hide { opacity: 0; transform: scale(1.05); pointer-events: none; z-index: -1; }
     .splash-logo {
       width: 80px; height: 80px;
       background: linear-gradient(135deg, var(--ios-blue), #5856D6);
@@ -356,18 +356,48 @@
     .ios-empty-text { font-size: 15px; }
 
     /* === FAB === */
+    /* === FAB === */
     .ios-fab {
       position: fixed; bottom: 100px; right: 20px;
-      width: 56px; height: 56px;
-      background: var(--ios-card);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      z-index: 99; cursor: pointer;
+      background: #1a1a2e;
+      border-radius: 28px;
+      padding: 10px 18px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 15px; font-weight: 600; color: #fff;
+      box-shadow: 0 4px 24px rgba(80,80,255,0.35), 0 0 0 1px rgba(255,255,255,0.1) inset;
+      z-index: 9999; cursor: pointer;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
     }
-    .ios-fab:active { transform: scale(0.88) rotate(20deg); }
+    .ios-fab .fab-icon { font-size: 20px; }
+    .ios-fab:active { transform: scale(0.88) rotate(3deg); }
+    .ios-fab.pulse { animation: fabPulse 2s ease-in-out infinite; }
+    @keyframes fabPulse {
+      0%,100% { box-shadow: 0 4px 24px rgba(80,80,255,0.35), 0 0 0 1px rgba(255,255,255,0.1) inset; }
+      50% { box-shadow: 0 4px 40px rgba(120,120,255,0.6), 0 0 0 3px rgba(120,120,255,0.3) inset; }
+    }
+
+    /* === Screen Shake === */
+    @keyframes screenShake {
+      0%  { transform: translateX(0)   rotate(0deg); }
+      10% { transform: translateX(-6px) rotate(-1deg); }
+      20% { transform: translateX(6px)  rotate(1deg); }
+      30% { transform: translateX(-5px) rotate(-0.5deg); }
+      40% { transform: translateX(5px)  rotate(0.5deg); }
+      50% { transform: translateX(-3px) rotate(-0.3deg); }
+      60% { transform: translateX(3px)  rotate(0.3deg); }
+      70% { transform: translateX(-2px) rotate(-0.1deg); }
+      80% { transform: translateX(2px)  rotate(0.1deg); }
+      90% { transform: translateX(-1px) rotate(0deg); }
+      100%{ transform: translateX(0)   rotate(0deg); }
+    }
+    .screen-shake { animation: screenShake 0.6s cubic-bezier(0.36,0.07,0.19,0.97) both; }
+
+    /* === Confetti Canvas === */
+    #confetti-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9998;
+    }
 
     /* === Modal === */
     .ios-modal-overlay {
@@ -401,17 +431,106 @@
     .ios-modal-btn:active { transform: scale(0.96); }
     .ios-modal-btn.secondary { background: var(--ios-gray5); color: var(--ios-text); }
 
-    /* === Fortune === */
-    .ios-fortune { background: var(--ios-gray6); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
-    .ios-fortune-icon { font-size: 48px; margin-bottom: 12px; animation: fortuneFloat 3s ease-in-out infinite; }
-    @keyframes fortuneFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+    /* === Fortune Header (Bamboo theme) === */
+    .fortune-header { background: linear-gradient(135deg, #4a7c59 0%, #2d5a3d 50%, #1a3a25 100%); position: relative; overflow: hidden; }
+    .fortune-header::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 3px, transparent 3px, transparent 8px);
     }
-    .ios-fortune-text { font-size: 15px; color: var(--ios-text); line-height: 1.5; }
-    .ios-slot { background: var(--ios-gray6); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 20px; min-height: 80px; display: flex; align-items: center; justify-content: center; }
-    .ios-slot-content { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; }
-    .ios-slot-emoji { font-size: 36px; }
+    .fortune-header-sticks { margin-bottom: 8px; }
+    .stick-row { display: flex; justify-content: center; gap: 6px; }
+    .stick-top { font-size: 16px; opacity: 0.6; }
+
+    /* === Bamboo Tube === */
+    .bamboo-container { perspective: 600px; margin-bottom: 20px; }
+    .bamboo-tube {
+      background: linear-gradient(180deg, #8B6914 0%, #6B4F0F 20%, #A67C00 50%, #6B4F0F 80%, #8B6914 100%);
+      border-radius: 20px; padding: 20px; min-height: 100px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+    .bamboo-tube::before, .bamboo-tube::after {
+      content: ''; position: absolute; left: 0; right: 0; height: 12px;
+      background: linear-gradient(90deg, #5a4010, #8B6914, #5a4010);
+      border-radius: 4px;
+    }
+    .bamboo-tube::before { top: 4px; }
+    .bamboo-tube::after { bottom: 4px; }
+    .bamboo-label {
+      background: rgba(0,0,0,0.3); border-radius: 8px; padding: 6px 16px;
+      font-size: 14px; color: #f5e6b0; font-weight: 600;
+      z-index: 2; letter-spacing: 1px;
+    }
+    .bamboo-sticks { position: absolute; width: 80%; height: 60%; display: flex; align-items: center; justify-content: center; }
+    .bamboo-stick {
+      position: absolute; width: 4px; height: 50px;
+      background: linear-gradient(90deg, #c4a35a, #e8cc8a, #c4a35a);
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform-origin: bottom center;
+    }
+    /* Shaking animation */
+    .bamboo-container.shaking .bamboo-tube {
+      animation: bambooShake 0.12s ease-in-out infinite alternate;
+    }
+    .bamboo-container.shaking .bamboo-stick { opacity: 0.7; }
+    @keyframes bambooShake {
+      from { transform: rotate(-8deg) translateY(-2px); }
+      to { transform: rotate(8deg) translateY(2px); }
+    }
+    /* Settled animation */
+    .bamboo-container.settled .bamboo-tube {
+      animation: bambooSettle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes bambooSettle {
+      0% { transform: rotate(-5deg); }
+      40% { transform: rotate(3deg); }
+      70% { transform: rotate(-1deg); }
+      100% { transform: rotate(0deg) translateY(0); }
+    }
+
+    /* === Fortune Result Stick Card === */
+    .fortune-result { margin-bottom: 16px; }
+    .fortune-stick-card {
+      background: linear-gradient(135deg, #FFF8E7 0%, #FFF3D6 100%);
+      border: 2px solid #D4A843; border-radius: 12px; padding: 16px;
+      text-align: center; position: relative;
+      box-shadow: 0 4px 12px rgba(212,168,67,0.3);
+      animation: stickReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .fortune-stick-card::before {
+      content: ''; position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+      width: 60%; height: 3px; background: linear-gradient(90deg, transparent, #D4A843, transparent); border-radius: 2px;
+    }
+    @keyframes stickReveal {
+      from { transform: scale(0.8) translateY(20px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .stick-number { font-size: 12px; color: #A08040; margin-bottom: 6px; font-weight: 600; letter-spacing: 2px; }
+    .stick-restaurant { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+    .stick-emoji { font-size: 28px; }
+    .stick-name { font-size: 18px; font-weight: 700; color: #5a4010; }
+    .stick-desc { font-size: 13px; color: #8a7040; line-height: 1.4; }
+
+    /* === Fortune Tape (运势小签) === */
+    .fortune-tape {
+      background: #FFF8E7; border: 1.5px dashed #D4A843; border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 16px; text-align: center;
+      animation: tapeSlide 0.5s ease-out;
+    }
+    .tape-text { font-size: 14px; color: #8a7040; line-height: 1.5; font-style: italic; }
+    @keyframes tapeSlide {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* === Fortune Button === */
+    .fortune-btn { background: linear-gradient(135deg, #4a7c59, #2d5a3d); letter-spacing: 1px; }
+    .fortune-btn:active:not(:disabled) { transform: scale(0.97); }
+    .fortune-btn:disabled { opacity: 0.6; }
 
     /* === Theme Toggle === */
     .ios-theme-toggle {
@@ -419,7 +538,7 @@
       width: 36px; height: 36px;
       background: var(--ios-gray5); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; z-index: 101; cursor: pointer;
+      font-size: 18px; z-index: 9999; cursor: pointer;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .ios-theme-toggle:active { transform: scale(0.88) rotate(180deg); }
@@ -579,7 +698,13 @@
     <div class="ios-footer" v-if="activeTab==='checkins'">共 {{checkinHistory.length}} 条记录</div>
 
     <!-- FAB -->
-    <div class="ios-fab" @click="openSlotMachine">🎰</div>
+    <div class="ios-fab pulse" @click="openSlotMachine">
+      <span class="fab-icon">🎰</span>
+      <span>今日运势</span>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
 
     <!-- Bottom Sheet Detail -->
     <div class="ios-sheet-overlay" :class="{show:selectedRestaurant}" @click="closeDetail"></div>
@@ -661,8 +786,10 @@
         </div>
 
         <!-- Checkin Button -->
-        <button class="ios-btn" :disabled="selectedFoods.length===0 && customFoods.length===0" @click="doCheckin">
-          打卡 ({{selectedFoods.length + customFoods.length}}道菜 · {{totalCalories}}kcal)
+        <button class="ios-btn" :disabled="isChecking || (selectedFoods.length===0 && customFoods.length===0)" @click="doCheckin">
+          <span v-if="isChecking">打卡中...</span>
+          <span v-else-if="checkinDone">✅ 已打卡</span>
+          <span v-else>打卡 ({{selectedFoods.length + customFoods.length}}道菜 · {{totalCalories}}kcal)</span>
         </button>
       </div>
     </div>
@@ -670,27 +797,49 @@
     <!-- Slot Machine Modal -->
     <div class="ios-modal-overlay" :class="{show:showSlot}" @click.self="closeSlotMachine">
       <div class="ios-modal">
-        <div class="ios-modal-header">
-          <div class="ios-modal-title">🎰 今日运势</div>
+        <div class="ios-modal-header fortune-header">
+          <div class="fortune-header-sticks">
+            <div class="stick-row"><span v-for="n in 5" :key="n" class="stick-top" :style="{animationDelay:(n*0.12)+'s'}">📏</span></div>
+          </div>
+          <div class="ios-modal-title">🎋 今日运势签</div>
           <div class="ios-modal-subtitle">{{todayStr}}</div>
         </div>
         <div class="ios-modal-body">
-          <div class="ios-fortune">
-            <div class="ios-fortune-icon">{{fortuneIcon}}</div>
-            <div class="ios-fortune-text">{{fortuneText}}</div>
-          </div>
-          <div class="ios-slot">
-            <div class="ios-slot-content" v-if="!slotResult">🎲</div>
-            <div class="ios-slot-content" v-else>
-              <span class="ios-slot-emoji">{{slotResult.emoji}}</span>
-              <span>{{slotResult.name}}</span>
+          <!-- 竹签筒 -->
+          <div class="bamboo-container" :class="{shaking:isSpinning, settled:slotResult && !isSpinning}">
+            <div class="bamboo-tube">
+              <div class="bamboo-label">
+                <span>{{slotResult ? '✋ 摇动抽取' : '🎲 请摇动签筒'}}</span>
+              </div>
+              <div class="bamboo-sticks">
+                <div v-for="n in 8" :key="n" class="bamboo-stick" :style="{transform:`rotate(${(n-1)*15}deg)`,animationDelay:(n*0.08)+'s'}"></div>
+              </div>
             </div>
           </div>
-          <button class="ios-modal-btn" @click="spinSlot" :disabled="isSpinning">
-            <span v-if="isSpinning">转动中...</span>
-            <span v-else>{{slotResult?'再来一次':'开始抽取'}}</span>
+
+          <!-- 结果区 -->
+          <div class="fortune-result" v-if="slotResult && !isSpinning">
+            <div class="fortune-stick-card">
+              <div class="stick-number">第 {{getStickNumber(slotResult)}} 签</div>
+              <div class="stick-restaurant">
+                <span class="stick-emoji">{{slotResult.emoji}}</span>
+                <span class="stick-name">{{slotResult.name}}</span>
+              </div>
+              <div class="stick-desc">{{slotResult.fortune || '今日宜：健康饮食，七分饱'}}</div>
+            </div>
+          </div>
+
+          <!-- 运势小签 -->
+          <div class="fortune-tape" v-if="fortuneText && !isSpinning">
+            <div class="tape-text">{{fortuneText}}</div>
+          </div>
+
+          <button class="ios-modal-btn fortune-btn" @click="spinSlot" :disabled="isSpinning">
+            <span v-if="isSpinning">摇动中...</span>
+            <span v-else-if="slotResult">🔄 重新抽取</span>
+            <span v-else>🙏 开始抽签</span>
           </button>
-          <button class="ios-modal-btn secondary" v-if="slotResult" @click="viewSlotResult" style="background:var(--ios-green);color:white">查看详情 →</button>
+          <button class="ios-modal-btn secondary" v-if="slotResult && !isSpinning" @click="viewSlotResult" style="background:var(--ios-green);color:white">查看餐厅 →</button>
           <button class="ios-modal-btn secondary" @click="closeSlotMachine">关闭</button>
         </div>
       </div>
@@ -722,6 +871,11 @@
             if(p>=100){p=100;loadPercent.value=100;clearInterval(interval);setTimeout(()=>{loaded.value=true;},300);}
             else loadPercent.value=Math.min(Math.round(p),99);
           },100);
+          // 首次打开自动弹老虎机
+          if(!localStorage.getItem('fatloss_first_visit')){
+            localStorage.setItem('fatloss_first_visit','1');
+            setTimeout(()=>{openSlotMachine();},1800);
+          }
         });
 
         // Theme
@@ -917,6 +1071,8 @@
 
         // Slot Machine
         const showSlot=ref(false);
+        const isChecking=ref(false);
+        const checkinDone=ref(false);
         const isSpinning=ref(false);
         const slotResult=ref(null);
         const todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'');
@@ -958,19 +1114,35 @@
           isSpinning.value=true;
           const all=[...restaurants.main,...restaurants.drinks];
           let count=0;
-          const interval=setInterval(()=>{
+          const totalSteps=12;
+          const getDelay=(n)=>{
+            if(n<3) return 50+n*20;
+            if(n<6) return 90+(n-3)*25;
+            if(n<9) return 150+(n-6)*60;
+            return [350,500,800,1500][n-9]||1500;
+          };
+          const tick=()=>{
+            count++;
             slotResult.value=all[Math.floor(Math.random()*all.length)];
-            if(navigator.vibrate) navigator.vibrate(5);
-            if(++count>=25){
-              clearInterval(interval);
-              isSpinning.value=false;
-              localStorage.setItem(SLOT_KEY+todayStr,JSON.stringify({
-                restaurantId:slotResult.value.id,
-                fortuneIdx:Math.floor(Math.random()*fortunes.length)
-              }));
-              if(navigator.vibrate) navigator.vibrate([20,30,40]);
+            if(navigator.vibrate) navigator.vibrate(4);
+            if(count>=totalSteps){
+              document.body.classList.add('screen-shake');
+              setTimeout(()=>{
+                document.body.classList.remove('screen-shake');
+                isSpinning.value=false;
+                localStorage.setItem(SLOT_KEY+todayStr,JSON.stringify({
+                  restaurantId:slotResult.value.id,
+                  fortuneIdx:Math.floor(Math.random()*fortunes.length)
+                }));
+                if(navigator.vibrate) navigator.vibrate([30,60,100,150,100]);
+                triggerConfetti();
+                setTimeout(triggerConfetti,200);
+              },400);
+            }else{
+              setTimeout(tick,getDelay(count));
             }
-          },80);
+          };
+          tick();
         };
 
         const viewSlotResult=()=>{
@@ -984,6 +1156,8 @@
         const filterByRating=(r)=>{currentRating.value=r;};
 
         const showDetail=(item)=>{
+          checkinDone.value=false;
+          isChecking.value=false;
           selectedRestaurant.value=item;
           selectedFoods.value=[];
           customFoods.value=[];
@@ -1053,6 +1227,8 @@
         };
 
         const doCheckin=()=>{
+          isChecking.value=true;
+          checkinDone.value=true;
           const now=new Date();
           const dateStr=`${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
           const allFoods=[...selectedFoods.value.map(f=>f.name),...customFoods.value.map(f=>f.name)];
@@ -1068,6 +1244,8 @@
           triggerConfetti();
           if(navigator.vibrate) navigator.vibrate([30,50,80,100,50]);
           Toast.success({message:`✅ 打卡成功！${totalCalories.value}kcal 🎉`,wordBreak:'break-word'});
+          isChecking.value=false;
+          if(navigator.vibrate) navigator.vibrate([30,50,80,100,50]);
           setTimeout(()=>{closeDetail();},1200);
         };
 
@@ -1076,16 +1254,23 @@
           return r?r.emoji:'🍽️';
         };
 
+        const getStickNumber=(item)=>{
+          let hash=0;
+          const str=item.id.toString();
+          for(let i=0;i<str.length;i++) hash=((hash<<5)-hash)+str.charCodeAt(i);
+          return String(Math.abs(hash)%99+1).padStart(2,'0');
+        };
+
         return{
           loaded,loadPercent,
           isDark,toggleTheme,
           activeTab,searchText,currentRating,selectedRestaurant,selectedFoods,favorites,checkinHistory,
           customFoodText,customFoodHints,customFoods,customFoodManualCal,
           totalCalories,calorieAnimating,currentList,filteredRestaurants,favoriteRestaurants,
-          showSlot,isSpinning,slotResult,todayStr,fortuneIcon,fortuneText,
-          filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,
+          showSlot,isSpinning,slotResult,todayStr,fortuneIcon,fortuneText,checkinDone,
+          isChecking,filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,
           isFavorite,toggleFavorite,doCheckin,getRestaurantEmoji,
-          openSlotMachine,closeSlotMachine,spinSlot,viewSlotResult,
+          openSlotMachine,closeSlotMachine,spinSlot,viewSlotResult,getStickNumber,
           onCustomFoodInput,selectCustomHint,addCustomFoodHint,removeCustomFood,
           onSwipeStart,onSwipeMove,onSwipeEnd,onCellClick,getSwipeClass,doSwipeFavorite,doSwipeSkip,
           confettiContainer
