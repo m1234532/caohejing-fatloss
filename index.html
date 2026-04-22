@@ -44,6 +44,7 @@
     .detail-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:white;z-index:1000;overflow-y:auto}
     .detail-header{background:linear-gradient(135deg,#00BCD4 0%,#26C6DA 100%);color:white;padding:16px;padding-top:44px;position:sticky;top:0;z-index:10}
     .detail-back{display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;cursor:pointer}
+    .detail-home{display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:13px;cursor:pointer;position:absolute;top:44px;right:16px;background:rgba(255,255,255,0.2);padding:6px 12px;border-radius:20px}
     .detail-title{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
     .detail-body{padding:16px}
     .detail-meta{display:flex;gap:12px;margin-bottom:16px;padding:14px;background:#f5f5f5;border-radius:12px}
@@ -115,6 +116,32 @@
     .restaurant-card{animation:fadeIn 0.3s ease-out}
     .checkin-card{animation:fadeIn 0.3s ease-out}
     .fav-card{animation:fadeIn 0.3s ease-out}
+    
+    /* Floating Button */
+    .float-btn{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FF9800,#FF5722);color:white;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,152,0,0.4);z-index:99;cursor:pointer;transition:transform 0.2s}
+    .float-btn:active{transform:scale(0.95)}
+    
+    /* Slot Machine Modal */
+    .slot-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px}
+    .slot-container{width:100%;max-width:360px;background:white;border-radius:20px;overflow:hidden;animation:slotPop 0.4s ease-out}
+    @keyframes slotPop{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+    .slot-header{background:linear-gradient(135deg,#FF9800,#FF5722);color:white;padding:20px;text-align:center}
+    .slot-title{font-size:20px;font-weight:700;margin-bottom:4px}
+    .slot-date{font-size:12px;opacity:0.9}
+    .slot-body{padding:20px}
+    .slot-fortune{background:linear-gradient(135deg,#FFF8E1,#FFECB3);padding:16px;border-radius:12px;margin-bottom:20px;text-align:center}
+    .slot-fortune-icon{font-size:36px;margin-bottom:8px}
+    .slot-fortune-text{font-size:15px;color:#E65100;line-height:1.6;font-weight:500}
+    .slot-machine{background:#f5f5f5;padding:20px;border-radius:12px;margin-bottom:20px;text-align:center}
+    .slot-display{background:white;padding:20px;border-radius:12px;font-size:28px;font-weight:700;color:#333;min-height:80px;display:flex;align-items:center;justify-content:center;gap:8px}
+    .slot-display-name{font-size:16px}
+    .slot-btn{width:100%;padding:14px;border-radius:25px;font-size:15px;font-weight:600;background:#FF9800;color:white;border:none;margin-bottom:10px}
+    .slot-btn:disabled{opacity:0.5}
+    .slot-close{width:100%;padding:12px;border-radius:25px;font-size:14px;background:#f5f5f5;color:#666;border:none}
+    .slot-result{margin-top:16px;padding:16px;background:#E8F5E9;border-radius:12px;text-align:center}
+    .slot-result-title{font-size:12px;color:#2E7D32;margin-bottom:8px}
+    .slot-result-name{font-size:18px;font-weight:600;color:#333;display:flex;align-items:center;justify-content:center;gap:8px}
+    .slot-result-meta{font-size:12px;color:#666;margin-top:8px}
   </style>
 </head>
 <body>
@@ -206,14 +233,44 @@
       </div>
     </div>
     
-    <div class="bottom-info" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.length}} 家餐厅 | 数据更新于2026年4月</div>
-    <div class="bottom-info" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.length}} 家餐厅</div>
-    <div class="bottom-info" v-if="activeTab==='checkins'">共 {{checkinHistory.length}} 条打卡记录</div>
+    <div class="bottom-info" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.value.length}} 家餐厅 | 数据更新于2026年4月</div>
+    <div class="bottom-info" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.value.length}} 家餐厅</div>
+    <div class="bottom-info" v-if="activeTab==='checkins'">共 {{checkinHistory.value.length}} 条打卡记录</div>
+    
+    <!-- Floating Button -->
+    <div class="float-btn" @click="openSlotMachine">🎰</div>
+    
+    <!-- Slot Machine Modal -->
+    <div class="slot-modal" v-if="showSlot" @click.self="closeSlotMachine">
+      <div class="slot-container">
+        <div class="slot-header">
+          <div class="slot-title">🎰 今日运势</div>
+          <div class="slot-date">{{todayStr}}</div>
+        </div>
+        <div class="slot-body">
+          <div class="slot-fortune">
+            <div class="slot-fortune-icon">{{fortuneIcon}}</div>
+            <div class="slot-fortune-text">{{fortuneText}}</div>
+          </div>
+          <div class="slot-machine">
+            <div class="slot-display" v-if="!slotResult">🎲</div>
+            <div class="slot-display" v-else>
+              <span>{{slotResult.emoji}}</span>
+              <span class="slot-display-name">{{slotResult.name}}</span>
+            </div>
+          </div>
+          <button class="slot-btn" @click="spinSlot" :disabled="isSpinning">{{isSpinning?'转动中...':(slotResult?'再来一次':'开始抽取')}}</button>
+          <button class="slot-btn" v-if="slotResult" @click="viewSlotResult" style="background:#00BCD4">查看详情</button>
+          <button class="slot-close" @click="closeSlotMachine">关闭</button>
+        </div>
+      </div>
+    </div>
     
     <!-- Detail Modal -->
     <div class="detail-modal" v-if="selectedRestaurant">
       <div class="detail-header">
         <div class="detail-back" @click="closeDetail">← 返回</div>
+        <div class="detail-home" @click="closeDetail;activeTab='main'">🏠 首页</div>
         <div class="detail-title">
           <span>{{selectedRestaurant.emoji}}</span>
           <span>{{selectedRestaurant.name}}</span>
@@ -347,6 +404,84 @@
           },0);
         });
         
+        // Slot Machine
+        const showSlot=ref(false);
+        const isSpinning=ref(false);
+        const slotResult=ref(null);
+        const SLOT_KEY='SLOT_DAILY_';
+        const todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'');
+        
+        const fortunes=[
+          {icon:'💪',text:'今日宜健身！三分练七分吃，减脂餐让你事半功倍！'},
+          {icon:'🥗',text:'胃口大开！选择低卡高蛋白菜品，清爽不油腻~'},
+          {icon:'🏃',text:'运动后，来份优质碳水和蛋白，恢复满满能量！'},
+          {icon:'🥤',text:'今日饮品推荐：无糖茶饮或黑咖啡，解腻又刮油！'},
+          {icon:'🍳',text:'优质蛋白不能少！鸡胸肉、鱼虾、鸡蛋都是好选择~'},
+          {icon:'🥬',text:'膳食纤维要多吃！蔬菜菌菇类帮助肠道蠕动~'},
+          {icon:'💧',text:'多喝水！每天2L水，提高代谢还能抑制食欲~'},
+          {icon:'⏰',text:'16+8间歇性禁食了解一下？让身体进入燃脂模式！'},
+        ];
+        const fortuneIcon=computed(()=>{
+          const saved=localStorage.getItem(SLOT_KEY+todayStr);
+          if(saved){
+            const idx=parseInt(JSON.parse(saved).fortuneIdx);
+            return fortunes[idx].icon;
+          }
+          return fortunes[Math.floor(Math.random()*fortunes.length)].icon;
+        });
+        const fortuneText=computed(()=>{
+          const saved=localStorage.getItem(SLOT_KEY+todayStr);
+          if(saved){
+            const idx=parseInt(JSON.parse(saved).fortuneIdx);
+            return fortunes[idx].text;
+          }
+          return fortunes[Math.floor(Math.random()*fortunes.length)].text;
+        });
+        
+        const openSlotMachine=()=>{
+          const saved=localStorage.getItem(SLOT_KEY+todayStr);
+          if(saved){
+            const data=JSON.parse(saved);
+            const r=restaurants.main.find(x=>x.id===data.restaurantId)||restaurants.drinks.find(x=>x.id===data.restaurantId);
+            slotResult.value=r||null;
+          }else{
+            slotResult.value=null;
+          }
+          showSlot.value=true;
+        };
+        const closeSlotMachine=()=>{showSlot.value=false;};
+        
+        const spinSlot=()=>{
+          isSpinning.value=true;
+          const allRestaurants=[...restaurants.main,...restaurants.drinks];
+          let spinCount=0;
+          const totalSpins=20;
+          const spinInterval=setInterval(()=>{
+            const randomIdx=Math.floor(Math.random()*allRestaurants.length);
+            slotResult.value=allRestaurants[randomIdx];
+            spinCount++;
+            if(spinCount>=totalSpins){
+              clearInterval(spinInterval);
+              const finalIdx=Math.floor(Math.random()*allRestaurants.length);
+              slotResult.value=allRestaurants[finalIdx];
+              isSpinning.value=false;
+              // Save daily result
+              const fortuneIdx=Math.floor(Math.random()*fortunes.length);
+              localStorage.setItem(SLOT_KEY+todayStr,JSON.stringify({
+                restaurantId:slotResult.value.id,
+                fortuneIdx:fortuneIdx,
+                date:todayStr
+              }));
+            }
+          },80);
+        };
+        const viewSlotResult=()=>{
+          if(slotResult.value){
+            closeSlotMachine();
+            showDetail(slotResult.value);
+          }
+        };
+        
         const onTabChange=()=>{searchText.value='';currentRating.value=0;};
         const filterByRating=(r)=>{currentRating.value=r;};
         
@@ -377,7 +512,7 @@
           if(isFoodSelected(food)){
             selectedFoods.value=selectedFoods.value.filter(f=>f.name!==food.name);
           }else{
-            selectedFoods.value.push({...food});
+            selectedFoods.value=[...selectedFoods.value,{...food}];
           }
         };
         
@@ -427,7 +562,7 @@
           return r?r.emoji:'🍽️';
         };
         
-        return{activeTab,searchText,currentRating,selectedRestaurant,selectedFoods,favorites,favoriteRestaurants,checkinHistory,selectedCalories,currentList,filteredRestaurants,onTabChange,filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,isFavorite,toggleFavorite,doCheckin,deleteCheckin,getRestaurantEmoji};
+        return{activeTab,searchText,currentRating,selectedRestaurant,selectedFoods,favorites,favoriteRestaurants,checkinHistory,selectedCalories,currentList,filteredRestaurants,onTabChange,filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,isFavorite,toggleFavorite,doCheckin,deleteCheckin,getRestaurantEmoji,showSlot,isSpinning,slotResult,todayStr,fortuneIcon,fortuneText,openSlotMachine,closeSlotMachine,spinSlot,viewSlotResult};
       }
     }).use(vant).mount('#app');
   </script>
