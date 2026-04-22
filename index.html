@@ -24,8 +24,8 @@
       --ios-text: #000000;
       --ios-text2: #3A3A3C;
       --ios-separator: rgba(60, 60, 67, 0.29);
+      --ios-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
-    
     [data-theme="dark"] {
       --ios-bg: #000000;
       --ios-card: #1C1C1E;
@@ -42,10 +42,9 @@
       --ios-text: #FFFFFF;
       --ios-text2: #EBEBF5;
       --ios-separator: rgba(84, 84, 88, 0.65);
+      --ios-shadow: 0 2px 12px rgba(0,0,0,0.3);
     }
-    
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
       background: var(--ios-bg);
@@ -53,630 +52,434 @@
       -webkit-font-smoothing: antialiased;
       transition: background 0.3s ease;
     }
-    
-    #app { min-height: 100vh; padding-bottom: 100px; }
-    
-    /* iOS Navigation Bar with Blur */
+    #app { min-height: 100vh; padding-bottom: 120px; }
+
+    /* === Loading Screen === */
+    .splash-screen {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--ios-bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .splash-screen.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+    .splash-logo {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, var(--ios-blue), #5856D6);
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,122,255,0.3);
+      animation: splashPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes splashPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,122,255,0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,122,255,0.4); }
+    }
+    .splash-title {
+      font-size: 22px; font-weight: 700; color: var(--ios-text);
+      margin-bottom: 8px; letter-spacing: -0.3px;
+    }
+    .splash-sub { font-size: 14px; color: var(--ios-gray); margin-bottom: 32px; }
+    .splash-bar {
+      width: 160px; height: 3px;
+      background: var(--ios-gray5);
+      border-radius: 2px; overflow: hidden;
+    }
+    .splash-bar-fill {
+      height: 100%; background: var(--ios-blue);
+      border-radius: 2px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .splash-percent {
+      font-size: 13px; color: var(--ios-gray);
+      margin-top: 12px; font-weight: 600;
+    }
+
+    /* === Nav Bar === */
     .ios-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: rgba(255, 255, 255, 0.72);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
       border-bottom: 0.5px solid var(--ios-separator);
-      padding: 8px 16px;
-      padding-top: 44px;
+      padding: 8px 16px; padding-top: 44px;
     }
-    
-    [data-theme="dark"] .ios-nav {
-      background: rgba(28, 28, 30, 0.72);
-    }
-    
-    .ios-nav-title {
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: -0.4px;
-      margin-bottom: 4px;
-    }
-    
-    .ios-nav-subtitle {
-      font-size: 15px;
-      color: var(--ios-gray);
-      font-weight: 400;
-    }
-    
-    .ios-search {
-      margin-top: 12px;
-    }
-    
+    [data-theme="dark"] .ios-nav { background: rgba(28, 28, 30, 0.72); }
+    .ios-nav-title { font-size: 34px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
+    .ios-nav-subtitle { font-size: 15px; color: var(--ios-gray); font-weight: 400; }
+    .ios-search { margin-top: 12px; }
     .ios-search .van-search__content {
-      background: var(--ios-gray5) !important;
-      border-radius: 10px !important;
+      background: var(--ios-gray5) !important; border-radius: 10px !important;
     }
-    
-    /* iOS Segmented Control */
+
+    /* === Segmented Control === */
     .ios-segment {
-      display: flex;
-      background: var(--ios-gray5);
-      border-radius: 8px;
-      padding: 2px;
-      margin: 12px 16px;
+      display: flex; background: var(--ios-gray5);
+      border-radius: 8px; padding: 2px; margin: 12px 16px;
     }
-    
     .ios-segment-item {
-      flex: 1;
-      text-align: center;
-      padding: 8px 4px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ios-text);
+      flex: 1; text-align: center; padding: 8px 4px;
+      font-size: 13px; font-weight: 500; color: var(--ios-text);
       border-radius: 6px;
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
     .ios-segment-item.active {
       background: var(--ios-card);
       box-shadow: 0 1px 3px rgba(0,0,0,0.12);
     }
-    
-    /* iOS Filter Chips */
+
+    /* === Filter Chips === */
     .ios-filter {
-      display: flex;
-      gap: 8px;
+      display: flex; gap: 8px;
       padding: 0 16px 12px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
     }
-    
     .ios-filter::-webkit-scrollbar { display: none; }
-    
     .ios-chip {
-      padding: 8px 16px;
-      background: var(--ios-gray5);
-      border-radius: 20px;
-      font-size: 15px;
-      font-weight: 400;
+      padding: 8px 16px; background: var(--ios-gray5);
+      border-radius: 20px; font-size: 15px; font-weight: 400;
       white-space: nowrap;
       transition: all 0.2s;
     }
-    
-    .ios-chip.active {
-      background: var(--ios-blue);
-      color: white;
-    }
-    
-    /* iOS List */
-    .ios-list {
-      padding: 0 16px;
-    }
-    
+    .ios-chip.active { background: var(--ios-blue); color: white; }
+
+    /* === Restaurant List === */
+    .ios-list { padding: 0 16px; }
     .ios-cell {
-      background: var(--ios-card);
-      border-radius: 12px;
-      margin-bottom: 10px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      transition: transform 0.2s;
+      background: var(--ios-card); border-radius: 16px;
+      margin-bottom: 10px; overflow: hidden;
+      box-shadow: var(--ios-shadow);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease;
+      position: relative;
+      user-select: none;
+      touch-action: pan-y;
     }
-    
-    .ios-cell:active { transform: scale(0.98); }
-    
-    .ios-cell-content {
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .ios-cell:active { transform: scale(0.97); }
+    .ios-cell.swiping { transition: none; }
+    .ios-cell.lifting {
+      transform: scale(1.03) rotate(var(--rot, 0deg));
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+      z-index: 10;
     }
-    
+    .swipe-hint-left, .swipe-hint-right {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 28px; opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .swipe-hint-left { left: 16px; }
+    .swipe-hint-right { right: 16px; }
+    .ios-cell.swiping-left .swipe-hint-left { opacity: 1; }
+    .ios-cell.swiping-right .swipe-hint-right { opacity: 1; }
+    .ios-cell.swiping-left { --rot: -3deg; }
+    .ios-cell.swiping-right { --rot: 3deg; }
+    .swipe-bg-left, .swipe-bg-right {
+      position: absolute; top: 0; bottom: 0;
+      display: flex; align-items: center;
+      font-size: 22px; font-weight: 700;
+      padding: 0 20px;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .swipe-bg-left { left: 0; background: var(--ios-orange); color: white; }
+    .swipe-bg-right { right: 0; background: var(--ios-red); color: white; }
+    .ios-cell.swiping-left .swipe-bg-left { opacity: 1; }
+    .ios-cell.swiping-right .swipe-bg-right { opacity: 1; }
+    .swipe-content { position: relative; z-index: 1; background: var(--ios-card); }
+    .ios-cell-content { padding: 16px; display: flex; align-items: center; gap: 12px; }
     .ios-cell-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
+      width: 48px; height: 48px; border-radius: 12px;
       background: linear-gradient(135deg, var(--ios-blue), #5856D6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
     }
-    
-    .ios-cell-body {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .ios-cell-title {
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--ios-text);
-      margin-bottom: 2px;
-      letter-spacing: -0.2px;
-    }
-    
-    .ios-cell-subtitle {
-      font-size: 15px;
-      color: var(--ios-gray);
-      font-weight: 400;
-    }
-    
-    .ios-cell-accessory {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--ios-gray);
-      font-size: 17px;
-    }
-    
-    /* iOS Big Number Display */
+    .ios-cell-body { flex: 1; min-width: 0; }
+    .ios-cell-title { font-size: 17px; font-weight: 600; color: var(--ios-text); margin-bottom: 2px; }
+    .ios-cell-subtitle { font-size: 15px; color: var(--ios-gray); }
+    .ios-cell-accessory { color: var(--ios-gray); font-size: 17px; }
+
+    /* === Big Metric === */
     .ios-metric {
-      background: var(--ios-card);
-      border-radius: 20px;
-      margin: 16px;
-      padding: 24px;
-      text-align: center;
+      background: var(--ios-card); border-radius: 20px;
+      margin: 16px; padding: 24px; text-align: center;
     }
-    
     .ios-metric-value {
-      font-size: 64px;
-      font-weight: 200;
-      line-height: 1;
+      font-size: 64px; font-weight: 200; line-height: 1;
       letter-spacing: -2px;
       background: linear-gradient(135deg, var(--ios-blue), #5856D6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
-    .ios-metric-label {
-      font-size: 15px;
-      color: var(--ios-gray);
-      margin-top: 8px;
-      font-weight: 400;
-    }
-    
     .ios-metric.danger .ios-metric-value {
       background: linear-gradient(135deg, var(--ios-red), #FF6B6B);
-      -webkit-background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    
-    /* iOS Button */
+    .ios-metric-label { font-size: 15px; color: var(--ios-gray); margin-top: 8px; }
+
+    /* === Buttons === */
     .ios-btn {
-      width: calc(100% - 32px);
-      margin: 16px;
-      padding: 16px;
-      background: var(--ios-blue);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 17px;
-      font-weight: 600;
+      width: calc(100% - 32px); margin: 16px; padding: 16px;
+      background: var(--ios-blue); color: white; border: none;
+      border-radius: 12px; font-size: 17px; font-weight: 600;
       letter-spacing: -0.2px;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative; overflow: hidden;
     }
-    
-    .ios-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .ios-btn:active { transform: scale(0.96); }
     .ios-btn:disabled { opacity: 0.4; }
-    
-    .ios-btn-secondary {
-      background: var(--ios-gray5);
-      color: var(--ios-blue);
+    .ios-btn.secondary { background: var(--ios-gray5); color: var(--ios-blue); }
+    /* Ripple effect */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      transform: scale(0); animation: rippleAnim 0.6s linear;
+      pointer-events: none;
     }
-    
-    /* iOS Bottom Sheet */
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+    /* === Bottom Sheet === */
     .ios-sheet-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.3s;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4); z-index: 1000;
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
     }
-    
-    .ios-sheet-overlay.show { opacity: 1; }
-    
+    .ios-sheet-overlay.show { opacity: 1; pointer-events: auto; }
     .ios-sheet {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 10%;
+      position: fixed; left: 0; right: 0; bottom: 0; top: 12%;
       background: var(--ios-bg);
       border-radius: 24px 24px 0 0;
       z-index: 1001;
       transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      overflow: hidden; display: flex; flex-direction: column;
     }
-    
     .ios-sheet.show { transform: translateY(0); }
-    
     .ios-sheet-handle {
-      width: 36px;
-      height: 5px;
-      background: var(--ios-gray3);
-      border-radius: 3px;
-      margin: 8px auto;
+      width: 36px; height: 5px; background: var(--ios-gray3);
+      border-radius: 3px; margin: 8px auto;
     }
-    
     .ios-sheet-header {
       padding: 8px 16px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       border-bottom: 0.5px solid var(--ios-separator);
     }
-    
-    .ios-sheet-title {
-      font-size: 17px;
-      font-weight: 600;
-    }
-    
-    .ios-sheet-close {
-      font-size: 17px;
-      color: var(--ios-blue);
-      font-weight: 400;
-      padding: 8px;
-      margin: -8px;
-    }
-    
-    .ios-sheet-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-    }
-    
-    /* iOS Grid Cards */
-    .ios-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    
+    .ios-sheet-title { font-size: 17px; font-weight: 600; }
+    .ios-sheet-close { font-size: 17px; color: var(--ios-blue); padding: 8px; margin: -8px; }
+    .ios-sheet-body { flex: 1; overflow-y: auto; padding: 16px; }
+
+    /* === Grid Cards === */
+    .ios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
     .ios-grid-card {
-      background: var(--ios-card);
-      border-radius: 16px;
-      padding: 16px;
-      min-height: 100px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
+      background: var(--ios-card); border-radius: 16px; padding: 16px;
+      min-height: 100px; display: flex; flex-direction: column;
+      justify-content: space-between; cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative; overflow: hidden;
     }
-    
-    .ios-grid-card:active { transform: scale(0.96); }
+    .ios-grid-card:active { transform: scale(0.95); }
+    .ios-grid-card.good { background: linear-gradient(135deg, rgba(52, 199, 89, 0.12), rgba(52, 199, 89, 0.04)); }
+    .ios-grid-card.bad { background: linear-gradient(135deg, rgba(255, 59, 48, 0.12), rgba(255, 59, 48, 0.04)); }
     .ios-grid-card.selected { opacity: 0.6; }
-    
-    .ios-grid-card.good { background: linear-gradient(135deg, rgba(52, 199, 89, 0.1), rgba(52, 199, 89, 0.05)); }
-    .ios-grid-card.bad { background: linear-gradient(135deg, rgba(255, 59, 48, 0.1), rgba(255, 59, 48, 0.05)); }
-    
-    .ios-grid-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--ios-text);
-      line-height: 1.3;
-    }
-    
+    .ios-grid-title { font-size: 15px; font-weight: 600; color: var(--ios-text); line-height: 1.3; }
     .ios-grid-badge {
-      font-size: 13px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: inline-block;
-      align-self: flex-start;
+      font-size: 13px; font-weight: 600; padding: 4px 10px;
+      border-radius: 20px; display: inline-block; align-self: flex-start;
     }
-    
     .ios-grid-card.good .ios-grid-badge { background: rgba(52, 199, 89, 0.15); color: var(--ios-green); }
     .ios-grid-card.bad .ios-grid-badge { background: rgba(255, 59, 48, 0.15); color: var(--ios-red); }
-    
     .ios-grid-check {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 24px;
-      height: 24px;
-      background: var(--ios-blue);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 14px;
+      position: absolute; top: 12px; right: 12px;
+      width: 24px; height: 24px; background: var(--ios-blue);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 14px;
     }
-    
-    /* iOS Section Header */
-    .ios-section {
-      margin-bottom: 20px;
-    }
-    
-    .ios-section-header {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      padding: 0 4px;
-      letter-spacing: -0.3px;
-    }
-    
-    /* iOS Info Box */
+
+    /* === Section === */
+    .ios-section { margin-bottom: 20px; }
+    .ios-section-header { font-size: 20px; font-weight: 700; margin-bottom: 12px; padding: 0 4px; }
+
+    /* === Info === */
     .ios-info {
-      background: rgba(255, 204, 0, 0.12);
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 15px;
-      line-height: 1.5;
-      color: var(--ios-text);
+      background: rgba(255, 204, 0, 0.12); border-radius: 12px;
+      padding: 16px; font-size: 15px; line-height: 1.5; color: var(--ios-text);
     }
-    
-    /* iOS Custom Input */
-    .ios-input-group {
-      background: var(--ios-card);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    
-    .ios-input-row {
-      padding: 12px 16px;
-      border-bottom: 0.5px solid var(--ios-separator);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
+
+    /* === Input === */
+    .ios-input-group { background: var(--ios-card); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+    .ios-input-row { padding: 12px 16px; border-bottom: 0.5px solid var(--ios-separator); display: flex; align-items: center; gap: 12px; }
     .ios-input-row:last-child { border-bottom: none; }
-    
-    .ios-input-label {
-      font-size: 17px;
-      color: var(--ios-text);
-      min-width: 80px;
-    }
-    
-    .ios-input-field {
-      flex: 1;
-      border: none;
-      background: transparent;
-      font-size: 17px;
-      color: var(--ios-text);
-      outline: none;
-    }
-    
+    .ios-input-label { font-size: 17px; color: var(--ios-text); min-width: 80px; }
+    .ios-input-field { flex: 1; border: none; background: transparent; font-size: 17px; color: var(--ios-text); outline: none; }
     .ios-input-field::placeholder { color: var(--ios-gray3); }
-    
-    /* iOS Tag */
-    .ios-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    
+
+    /* === Tags === */
+    .ios-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .ios-tag {
-      background: var(--ios-blue);
-      color: white;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      background: var(--ios-blue); color: white; padding: 8px 14px;
+      border-radius: 20px; font-size: 15px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+      animation: tagPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
+    @keyframes tagPop {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
     .ios-tag-remove {
-      width: 18px;
-      height: 18px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
+      width: 18px; height: 18px; background: rgba(255,255,255,0.3);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; cursor: pointer;
     }
-    
-    /* iOS Suggestions */
-    .ios-suggestions {
-      background: var(--ios-card);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-    
+
+    /* === Suggestions === */
+    .ios-suggestions { background: var(--ios-card); border-radius: 12px; overflow: hidden; margin-top: 8px; }
     .ios-suggestion-item {
-      padding: 14px 16px;
-      border-bottom: 0.5px solid var(--ios-separator);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
+      padding: 14px 16px; border-bottom: 0.5px solid var(--ios-separator);
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer;
     }
-    
     .ios-suggestion-item:last-child { border-bottom: none; }
     .ios-suggestion-item:active { background: var(--ios-gray6); }
-    
     .ios-suggestion-name { font-size: 17px; color: var(--ios-text); }
     .ios-suggestion-cal { font-size: 15px; color: var(--ios-blue); font-weight: 600; }
-    
-    /* iOS Empty State */
-    .ios-empty {
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--ios-gray);
-    }
-    
+
+    /* === Empty State === */
+    .ios-empty { text-align: center; padding: 80px 20px; color: var(--ios-gray); }
     .ios-empty-icon { font-size: 64px; margin-bottom: 16px; }
     .ios-empty-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--ios-text); }
     .ios-empty-text { font-size: 15px; }
-    
-    /* iOS Footer */
-    .ios-footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--ios-gray);
-      font-size: 13px;
-    }
-    
-    /* Floating Action Button */
+
+    /* === FAB === */
     .ios-fab {
-      position: fixed;
-      bottom: 100px;
-      right: 20px;
-      width: 64px;
-      height: 64px;
+      position: fixed; bottom: 100px; right: 20px;
+      width: 56px; height: 56px;
       background: var(--ios-card);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      z-index: 99;
-      cursor: pointer;
-      transition: all 0.2s;
+      z-index: 99; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
-    .ios-fab:active { transform: scale(0.92); }
-    
-    /* iOS Modal with Blur */
+    .ios-fab:active { transform: scale(0.88) rotate(20deg); }
+
+    /* === Modal === */
     .ios-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      transition: opacity 0.3s;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
     }
-    
+    .ios-modal-overlay.show { opacity: 1; pointer-events: auto; }
     .ios-modal-overlay.show { opacity: 1; }
-    
     .ios-modal {
-      background: var(--ios-card);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 340px;
-      overflow: hidden;
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+      background: var(--ios-card); border-radius: 20px;
+      width: 100%; max-width: 340px; overflow: hidden;
+      transform: scale(0.85) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
     }
-    
-    .ios-modal-overlay.show .ios-modal { transform: scale(1); }
-    
-    .ios-modal-header {
-      background: var(--ios-blue);
-      color: white;
-      padding: 24px;
-      text-align: center;
-    }
-    
+    .ios-modal-overlay.show .ios-modal { transform: scale(1) translateY(0); }
+    .ios-modal-header { background: var(--ios-blue); color: white; padding: 24px; text-align: center; }
     .ios-modal-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
     .ios-modal-subtitle { font-size: 15px; opacity: 0.8; }
-    
     .ios-modal-body { padding: 20px; }
-    
     .ios-modal-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--ios-blue);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 17px;
-      font-weight: 600;
+      width: 100%; padding: 14px; background: var(--ios-blue); color: white;
+      border: none; border-radius: 12px; font-size: 17px; font-weight: 600;
       margin-bottom: 10px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
-    .ios-modal-btn.secondary {
-      background: var(--ios-gray5);
-      color: var(--ios-text);
+    .ios-modal-btn:active { transform: scale(0.96); }
+    .ios-modal-btn.secondary { background: var(--ios-gray5); color: var(--ios-text); }
+
+    /* === Fortune === */
+    .ios-fortune { background: var(--ios-gray6); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+    .ios-fortune-icon { font-size: 48px; margin-bottom: 12px; animation: fortuneFloat 3s ease-in-out infinite; }
+    @keyframes fortuneFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
-    
-    /* iOS Fortune Display */
-    .ios-fortune {
-      background: var(--ios-gray6);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    
-    .ios-fortune-icon { font-size: 48px; margin-bottom: 12px; }
     .ios-fortune-text { font-size: 15px; color: var(--ios-text); line-height: 1.5; }
-    
-    /* iOS Slot Display */
-    .ios-slot {
-      background: var(--ios-gray6);
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-      margin-bottom: 20px;
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .ios-slot-content {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    
-    .ios-slot-emoji { font-size: 40px; }
-    
-    /* Theme Toggle */
+    .ios-slot { background: var(--ios-gray6); border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 20px; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+    .ios-slot-content { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; }
+    .ios-slot-emoji { font-size: 36px; }
+
+    /* === Theme Toggle === */
     .ios-theme-toggle {
-      position: fixed;
-      top: 50px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      background: var(--ios-gray5);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      z-index: 101;
-      cursor: pointer;
+      position: fixed; top: 50px; right: 16px;
+      width: 36px; height: 36px;
+      background: var(--ios-gray5); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; z-index: 101; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
-    /* Animations */
+    .ios-theme-toggle:active { transform: scale(0.88) rotate(180deg); }
+
+    /* === Confetti === */
+    .confetti-container {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none; z-index: 9998;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute; width: 10px; height: 10px;
+      border-radius: 2px;
+      animation: confettiFall 3s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* === List animations === */
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    .ios-cell { animation: slideUp 0.4s ease-out; }
-    
-    /* Toast */
-    .van-toast {
-      border-radius: 12px !important;
-      font-size: 15px !important;
+    .ios-cell { animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+    /* === Pulse ring === */
+    .pulse-ring {
+      position: absolute; border-radius: 50%;
+      border: 2px solid var(--ios-blue);
+      animation: pulseRing 0.6s ease-out forwards;
+      pointer-events: none;
     }
+    @keyframes pulseRing {
+      from { transform: scale(0.5); opacity: 1; }
+      to { transform: scale(2); opacity: 0; }
+    }
+
+    /* === Toast === */
+    .van-toast { border-radius: 12px !important; font-size: 15px !important; }
   </style>
 </head>
 <body>
   <div id="app">
+    <!-- Loading Screen -->
+    <div class="splash-screen" :class="{hide:loaded}">
+      <div class="splash-logo">🥗</div>
+      <div class="splash-title">减脂餐厅</div>
+      <div class="splash-sub">漕河泾印象城 · 科学饮食</div>
+      <div class="splash-bar"><div class="splash-bar-fill" :style="{width: loadPercent+'%'}"></div></div>
+      <div class="splash-percent">{{loadPercent}}%</div>
+    </div>
+
+    <!-- Confetti -->
+    <div class="confetti-container" ref="confettiContainer"></div>
+
     <!-- Theme Toggle -->
-    <div class="ios-theme-toggle" @click="toggleTheme">{{isDark?'☀️':'🌙'}}</div>
-    
+    <div class="ios-theme-toggle" @click="toggleTheme" :style="{top: loaded?'50px':'-60px'}">{{isDark?'☀️':'🌙'}}</div>
+
     <!-- Navigation -->
     <div class="ios-nav">
       <div class="ios-nav-title">🥗 减脂餐厅</div>
@@ -685,7 +488,7 @@
         <van-search v-model="searchText" placeholder="搜索餐厅或菜系..." shape="round" background="transparent"/>
       </div>
     </div>
-    
+
     <!-- Segmented Control -->
     <div class="ios-segment">
       <div class="ios-segment-item" :class="{active:activeTab==='main'}" @click="activeTab='main'">正餐</div>
@@ -693,7 +496,7 @@
       <div class="ios-segment-item" :class="{active:activeTab==='favorites'}" @click="activeTab='favorites'">收藏</div>
       <div class="ios-segment-item" :class="{active:activeTab==='checkins'}" @click="activeTab='checkins'">记录</div>
     </div>
-    
+
     <!-- Filter Chips -->
     <div class="ios-filter" v-if="activeTab==='main' || activeTab==='drinks'">
       <div class="ios-chip" :class="{active:currentRating===0}" @click="filterByRating(0)">全部</div>
@@ -701,21 +504,35 @@
       <div class="ios-chip" :class="{active:currentRating===4}" @click="filterByRating(4)">⭐⭐⭐⭐</div>
       <div class="ios-chip" :class="{active:currentRating===3}" @click="filterByRating(3)">⭐⭐⭐</div>
     </div>
-    
-    <!-- Restaurant List -->
+
+    <!-- Restaurant List with Swipe -->
     <div class="ios-list" v-if="activeTab==='main' || activeTab==='drinks'">
-      <div class="ios-cell" v-for="item in filteredRestaurants" :key="item.id" @click="showDetail(item)">
-        <div class="ios-cell-content">
-          <div class="ios-cell-icon">{{item.emoji}}</div>
-          <div class="ios-cell-body">
-            <div class="ios-cell-title">{{item.name}}</div>
-            <div class="ios-cell-subtitle">{{'⭐'.repeat(item.rating)}} · {{item.cuisine}} · ¥{{item.price}}</div>
+      <div
+        v-for="item in filteredRestaurants"
+        :key="item.id"
+        class="ios-cell"
+        :class="getSwipeClass(item.id)"
+        @touchstart="onSwipeStart($event, item)"
+        @touchmove="onSwipeMove($event, item)"
+        @touchend="onSwipeEnd($event, item)"
+        @click="onCellClick($event, item)"
+      >
+        <!-- Swipe backgrounds -->
+        <div class="swipe-bg-right" @click.stop="doSwipeSkip(item)">🚫 跳过</div>
+        <div class="swipe-bg-left" @click.stop="doSwipeFavorite(item)">❤️ 收藏</div>
+        <div class="swipe-content">
+          <div class="ios-cell-content">
+            <div class="ios-cell-icon">{{item.emoji}}</div>
+            <div class="ios-cell-body">
+              <div class="ios-cell-title">{{item.name}}</div>
+              <div class="ios-cell-subtitle">{{'⭐'.repeat(item.rating)}} · {{item.cuisine}} · ¥{{item.price}}</div>
+            </div>
+            <div class="ios-cell-accessory">›</div>
           </div>
-          <div class="ios-cell-accessory">›</div>
         </div>
       </div>
     </div>
-    
+
     <!-- Favorites -->
     <div class="ios-list" v-if="activeTab==='favorites'">
       <div class="ios-cell" v-for="item in favoriteRestaurants" :key="item.id" @click="showDetail(item)">
@@ -731,21 +548,21 @@
       <div class="ios-empty" v-if="favoriteRestaurants.length===0">
         <div class="ios-empty-icon">❤️</div>
         <div class="ios-empty-title">还没有收藏</div>
-        <div class="ios-empty-text">点击餐厅详情页的❤️来收藏</div>
+        <div class="ios-empty-text">左滑餐厅卡片即可收藏</div>
       </div>
     </div>
-    
+
     <!-- Checkin History -->
     <div class="ios-list" v-if="activeTab==='checkins'">
       <div class="ios-cell" v-for="(ci, idx) in checkinHistory" :key="idx">
         <div class="ios-cell-content">
-          <div class="ios-cell-icon">{{getRestaurantEmoji(ci.restaurantId)}}</div>
+          <div class="ios-cell-icon">{{ci.emoji}}</div>
           <div class="ios-cell-body">
             <div class="ios-cell-title">{{ci.restaurantName}}</div>
             <div class="ios-cell-subtitle">{{ci.date}} · {{ci.foods.slice(0,2).join('、')}}{{ci.foods.length>2?'...':''}}</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:20px;font-weight:600;color:var(--ios-orange)">{{ci.calories}}</div>
+            <div style="font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--ios-orange),var(--ios-red));-webkit-background-clip:text;-webkit-text-fill-color:transparent">{{ci.calories}}</div>
             <div style="font-size:11px;color:var(--ios-gray)">kcal</div>
           </div>
         </div>
@@ -756,14 +573,14 @@
         <div class="ios-empty-text">选择餐厅菜品后点击"打卡"来记录</div>
       </div>
     </div>
-    
+
     <div class="ios-footer" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.length}} 家餐厅</div>
     <div class="ios-footer" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.length}} 家</div>
     <div class="ios-footer" v-if="activeTab==='checkins'">共 {{checkinHistory.length}} 条记录</div>
-    
+
     <!-- FAB -->
     <div class="ios-fab" @click="openSlotMachine">🎰</div>
-    
+
     <!-- Bottom Sheet Detail -->
     <div class="ios-sheet-overlay" :class="{show:selectedRestaurant}" @click="closeDetail"></div>
     <div class="ios-sheet" :class="{show:selectedRestaurant}">
@@ -776,15 +593,15 @@
       <div class="ios-sheet-body" v-if="selectedRestaurant">
         <!-- Big Calorie Display -->
         <div class="ios-metric" :class="{danger:totalCalories>500}">
-          <div class="ios-metric-value">{{totalCalories}}</div>
+          <div class="ios-metric-value" :style="{transform: calorieAnimating ? 'scale(1.15)' : 'scale(1)'}">{{totalCalories}}</div>
           <div class="ios-metric-label">已选热量 (kcal)</div>
         </div>
-        
+
         <!-- Favorite Button -->
-        <button class="ios-btn" :style="{background:isFavorite(selectedRestaurant)?'var(--ios-red)':'var(--ios-blue)'" @click="toggleFavorite(selectedRestaurant)">
+        <button class="ios-btn" :style="{background:isFavorite(selectedRestaurant)?'var(--ios-red)':'var(--ios-blue)'}" @click="toggleFavorite(selectedRestaurant)">
           {{isFavorite(selectedRestaurant)?'❤️ 已收藏':'🤍 收藏餐厅'}}
         </button>
-        
+
         <!-- Recommended Foods -->
         <div class="ios-section">
           <div class="ios-section-header">✅ 低卡推荐</div>
@@ -796,7 +613,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Avoid Foods -->
         <div class="ios-section">
           <div class="ios-section-header">🚫 减脂避免</div>
@@ -808,13 +625,13 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Tips -->
         <div class="ios-section">
           <div class="ios-section-header">💡 减脂建议</div>
           <div class="ios-info">{{selectedRestaurant.tips}}</div>
         </div>
-        
+
         <!-- Custom Food -->
         <div class="ios-section">
           <div class="ios-section-header">🍽️ 自定义菜品</div>
@@ -826,17 +643,15 @@
             <div class="ios-input-row" v-if="customFoodText">
               <span class="ios-input-label">卡路里</span>
               <input class="ios-input-field" v-model="customFoodManualCal" type="number" placeholder="输入数值">
-              <button class="ios-btn" style="width:auto;margin:0;padding:8px 16px;font-size:15px" @click="addCustomFoodHint">添加</button>
+              <button style="padding:8px 16px;background:var(--ios-blue);color:white;border:none;border-radius:8px;font-size:15px;font-weight:600" @click="addCustomFoodHint">添加</button>
             </div>
           </div>
-          
           <div class="ios-suggestions" v-if="customFoodHints.length>0">
             <div class="ios-suggestion-item" v-for="hint in customFoodHints" :key="hint.name" @click="selectCustomHint(hint)">
               <span class="ios-suggestion-name">{{hint.name}}</span>
               <span class="ios-suggestion-cal">{{hint.cal}} kcal</span>
             </div>
           </div>
-          
           <div class="ios-tags" v-if="customFoods.length>0">
             <div class="ios-tag" v-for="(food,idx) in customFoods" :key="idx">
               {{food.name}} {{food.cal}}
@@ -844,14 +659,14 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Checkin Button -->
         <button class="ios-btn" :disabled="selectedFoods.length===0 && customFoods.length===0" @click="doCheckin">
           打卡 ({{selectedFoods.length + customFoods.length}}道菜 · {{totalCalories}}kcal)
         </button>
       </div>
     </div>
-    
+
     <!-- Slot Machine Modal -->
     <div class="ios-modal-overlay" :class="{show:showSlot}" @click.self="closeSlotMachine">
       <div class="ios-modal">
@@ -871,37 +686,54 @@
               <span>{{slotResult.name}}</span>
             </div>
           </div>
-          <button class="ios-modal-btn" @click="spinSlot" :disabled="isSpinning">{{isSpinning?'转动中...':(slotResult?'再来一次':'开始抽取')}}</button>
-          <button class="ios-modal-btn secondary" v-if="slotResult" @click="viewSlotResult" style="background:var(--ios-green)">查看详情</button>
+          <button class="ios-modal-btn" @click="spinSlot" :disabled="isSpinning">
+            <span v-if="isSpinning">转动中...</span>
+            <span v-else>{{slotResult?'再来一次':'开始抽取'}}</span>
+          </button>
+          <button class="ios-modal-btn secondary" v-if="slotResult" @click="viewSlotResult" style="background:var(--ios-green);color:white">查看详情 →</button>
           <button class="ios-modal-btn secondary" @click="closeSlotMachine">关闭</button>
         </div>
       </div>
     </div>
   </div>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vant@4/lib/vant.min.js"></script>
   <script src="data.js"></script>
   <script>
-    const {createApp,ref,computed,onMounted}=Vue;
-    const {Search,Toast,Dialog}=vant;
-    
+    const {createApp,ref,computed,onMounted,nextTick}=Vue;
+    const {Search,Toast}=vant;
+
     const FAV_KEY='fatloss_favorites';
     const CHECKIN_KEY='fatloss_checkins';
     const THEME_KEY='fatloss_theme';
     const SLOT_KEY='SLOT_DAILY_';
-    
+
     createApp({
       components:{[Search.name]:Search},
       setup(){
+        // Loading
+        const loaded=ref(false);
+        const loadPercent=ref(0);
+        onMounted(()=>{
+          let p=0;
+          const interval=setInterval(()=>{
+            p+=Math.random()*15+5;
+            if(p>=100){p=100;loadPercent.value=100;clearInterval(interval);setTimeout(()=>{loaded.value=true;},300);}
+            else loadPercent.value=Math.min(Math.round(p),99);
+          },100);
+        });
+
         // Theme
         const isDark=ref(false);
         const toggleTheme=()=>{
           isDark.value=!isDark.value;
           document.body.setAttribute('data-theme',isDark.value?'dark':'light');
           localStorage.setItem(THEME_KEY,isDark.value?'dark':'light');
+          // Haptic
+          if(navigator.vibrate) navigator.vibrate(10);
         };
-        
+
         onMounted(()=>{
           const saved=localStorage.getItem(THEME_KEY);
           if(saved==='dark'){
@@ -909,7 +741,7 @@
             document.body.setAttribute('data-theme','dark');
           }
         });
-        
+
         // State
         const activeTab=ref('main');
         const searchText=ref('');
@@ -918,14 +750,104 @@
         const selectedFoods=ref([]);
         const favorites=ref(JSON.parse(localStorage.getItem(FAV_KEY)||'[]'));
         const checkinHistory=ref(JSON.parse(localStorage.getItem(CHECKIN_KEY)||'[]'));
-        
+
+        // Swipe state
+        const swipeStates=ref({});
+        const isSwiping=ref(false);
+
+        const getSwipeClass=(id)=>{
+          const s=swipeStates.value[id]||{dir:null};
+          return{
+            swiping: s.dir!==null,
+            'swiping-left': s.dir==='left',
+            'swiping-right': s.dir==='right',
+            lifting: s.lifting||false
+          };
+        };
+
+        const onSwipeStart=(e, item)=>{
+          swipeStates.value[item.id]={dir:null,startX:e.touches[0].clientX,lifting:false,swiped:false};
+          isSwiping.value=true;
+        };
+
+        const onSwipeMove=(e, item)=>{
+          if(!isSwiping.value)return;
+          const s=swipeStates.value[item.id];
+          if(!s)return;
+          const dx=e.touches[0].clientX-s.startX;
+          const absDx=Math.abs(dx);
+          if(absDx<8)return;
+          e.preventDefault();
+          const maxSwipe=120;
+          const clamped=Math.max(-maxSwipe,Math.min(maxSwipe,dx));
+          const el=e.currentTarget;
+          if(!s.applied){
+            el.classList.add('swiping');
+            s.applied=true;
+          }
+          el.style.transform=`translateX(${clamped}px)`;
+          el.style.transition='none';
+          if(dx>0){
+            el.classList.add('swiping-right');
+            el.classList.remove('swiping-left','lifting');
+            if(absDx>60){el.classList.add('lifting');s.lifting=true;}
+          } else {
+            el.classList.add('swiping-left');
+            el.classList.remove('swiping-right','lifting');
+            if(absDx>60){el.classList.add('lifting');s.lifting=true;}
+          }
+          s.dir=dx>0?'right':'left';
+          if(absDx>50) s.swiped=true;
+        };
+
+        const onSwipeEnd=(e, item)=>{
+          isSwiping.value=false;
+          const el=e.currentTarget;
+          el.classList.remove('swiping','swiping-left','swiping-right','lifting');
+          el.style.transform='';
+          el.style.transition='';
+          swipeStates.value[item.id]={dir:null,applied:false,swiped:false};
+        };
+
+        const onCellClick=(e, item)=>{
+          // If significant swipe happened, don't trigger click
+          if(swipeStates.value[item.id]?.swiped)return;
+          showDetail(item);
+        };
+
+        const doSwipeFavorite=(item)=>{
+          if(!isFavorite(item)){
+            favorites.value=[...favorites.value,item.id];
+            localStorage.setItem(FAV_KEY,JSON.stringify(favorites.value));
+            Toast.success({message:'❤️ 已收藏！',wordBreak:'break-word'});
+            if(navigator.vibrate) navigator.vibrate([20,30,20]);
+          }
+          // Reset swipe
+          const els=document.querySelectorAll('.ios-cell');
+          els.forEach(el=>{
+            el.classList.remove('swiping','swiping-left','swiping-right','lifting');
+            el.style.transform=''; el.style.transition='';
+          });
+          swipeStates.value={};
+        };
+
+        const doSwipeSkip=(item)=>{
+          Toast({message:'🚫 已跳过',wordBreak:'break-word'});
+          if(navigator.vibrate) navigator.vibrate(10);
+          const els=document.querySelectorAll('.ios-cell');
+          els.forEach(el=>{
+            el.classList.remove('swiping','swiping-left','swiping-right','lifting');
+            el.style.transform=''; el.style.transition='';
+          });
+          swipeStates.value={};
+        };
+
         // Custom Food
         const customFoodText=ref('');
         const customFoodHints=ref([]);
         const customFoods=ref([]);
         const customFoodManualCal=ref('');
-        
-        // Calorie DB
+
         const calorieDB={
           '鸡腿':'180','鸡胸肉':'150','鸡翅':'200','牛肉':'150','牛排':'280',
           '虾':'100','鱼':'120','清蒸鱼':'150','青菜':'50','蔬菜':'40',
@@ -933,7 +855,7 @@
           '奶茶':'300','拿铁':'150','美式':'10','可乐':'140','酸奶':'100',
           '薯条':'320','炸鸡':'380','沙拉':'150','蛋':'80','鸡蛋':'80'
         };
-        
+
         const onCustomFoodInput=()=>{
           const text=customFoodText.value.trim().toLowerCase();
           if(!text){customFoodHints.value=[];return;}
@@ -946,14 +868,14 @@
           }
           customFoodHints.value=hints;
         };
-        
+
         const selectCustomHint=(hint)=>{
           customFoods.value=[...customFoods.value,{name:hint.name,cal:hint.cal+'kcal'}];
           customFoodText.value='';
           customFoodHints.value=[];
           Toast.success(`已添加：${hint.name}`);
         };
-        
+
         const addCustomFoodHint=()=>{
           const name=customFoodText.value.trim();
           if(!name){Toast('请输入菜品名称');return;}
@@ -970,17 +892,16 @@
           customFoodManualCal.value='';
           Toast.success(`已添加：${name}`);
         };
-        
         const removeCustomFood=(idx)=>{customFoods.value.splice(idx,1);};
-        
+
+        const calorieAnimating=ref(false);
         const totalCalories=computed(()=>{
           const base=selectedFoods.value.reduce((sum,f)=>sum+(parseInt(f.cal)||0),0);
           const custom=customFoods.value.reduce((sum,f)=>sum+(parseInt(f.cal)||0),0);
           return base+custom;
         });
-        
+
         const currentList=computed(()=>activeTab.value==='main'?restaurants.main:restaurants.drinks);
-        
         const filteredRestaurants=computed(()=>{
           let list=currentList.value;
           if(currentRating.value>0)list=list.filter(item=>item.rating===currentRating.value);
@@ -990,17 +911,16 @@
           }
           return list;
         });
-        
         const favoriteRestaurants=computed(()=>favorites.value.map(id=>{
           return restaurants.main.find(x=>x.id===id)||restaurants.drinks.find(x=>x.id===id);
         }).filter(x=>x));
-        
+
         // Slot Machine
         const showSlot=ref(false);
         const isSpinning=ref(false);
         const slotResult=ref(null);
         const todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'');
-        
+
         const fortunes=[
           {icon:'💪',text:'今日宜健身！三分练七分吃，减脂餐让你事半功倍！'},
           {icon:'🥗',text:'胃口大开！选择低卡高蛋白菜品，清爽不油腻~'},
@@ -1011,19 +931,18 @@
           {icon:'💧',text:'多喝水！每天2L水，提高代谢还能抑制食欲~'},
           {icon:'⏰',text:'16+8间歇性禁食了解一下？让身体进入燃脂模式！'},
         ];
-        
+
         const fortuneIcon=computed(()=>{
           const saved=localStorage.getItem(SLOT_KEY+todayStr);
           if(saved)return fortunes[JSON.parse(saved).fortuneIdx].icon;
           return fortunes[Math.floor(Math.random()*fortunes.length)].icon;
         });
-        
         const fortuneText=computed(()=>{
           const saved=localStorage.getItem(SLOT_KEY+todayStr);
           if(saved)return fortunes[JSON.parse(saved).fortuneIdx].text;
           return fortunes[Math.floor(Math.random()*fortunes.length)].text;
         });
-        
+
         const openSlotMachine=()=>{
           const saved=localStorage.getItem(SLOT_KEY+todayStr);
           if(saved){
@@ -1031,37 +950,39 @@
             slotResult.value=restaurants.main.find(x=>x.id===data.restaurantId)||restaurants.drinks.find(x=>x.id===data.restaurantId);
           }else{slotResult.value=null;}
           showSlot.value=true;
+          if(navigator.vibrate) navigator.vibrate(15);
         };
         const closeSlotMachine=()=>{showSlot.value=false;};
-        
+
         const spinSlot=()=>{
           isSpinning.value=true;
           const all=[...restaurants.main,...restaurants.drinks];
           let count=0;
           const interval=setInterval(()=>{
             slotResult.value=all[Math.floor(Math.random()*all.length)];
-            if(++count>=20){
+            if(navigator.vibrate) navigator.vibrate(5);
+            if(++count>=25){
               clearInterval(interval);
               isSpinning.value=false;
               localStorage.setItem(SLOT_KEY+todayStr,JSON.stringify({
                 restaurantId:slotResult.value.id,
                 fortuneIdx:Math.floor(Math.random()*fortunes.length)
               }));
+              if(navigator.vibrate) navigator.vibrate([20,30,40]);
             }
           },80);
         };
-        
+
         const viewSlotResult=()=>{
           if(slotResult.value){
             closeSlotMachine();
-            showDetail(slotResult.value);
+            nextTick(()=>showDetail(slotResult.value));
           }
         };
-        
+
         // Actions
-        const onTabChange=()=>{searchText.value='';currentRating.value=0;};
         const filterByRating=(r)=>{currentRating.value=r;};
-        
+
         const showDetail=(item)=>{
           selectedRestaurant.value=item;
           selectedFoods.value=[];
@@ -1072,7 +993,7 @@
           selectedFoods.value=[];
           customFoods.value=[];
         };
-        
+
         const parseFoods=(text)=>{
           if(!text)return[];
           return text.split('\n').map(item=>{
@@ -1080,7 +1001,7 @@
             return{name:parts[0]||'',cal:parseInt(parts[1])||0};
           });
         };
-        
+
         const isFoodSelected=(food)=>selectedFoods.value.some(f=>f.name===food.name);
         const toggleFood=(food)=>{
           if(isFoodSelected(food)){
@@ -1088,52 +1009,86 @@
           }else{
             selectedFoods.value=[...selectedFoods.value,{...food}];
           }
+          // Animate calorie
+          calorieAnimating.value=true;
+          setTimeout(()=>{calorieAnimating.value=false;},400);
+          if(navigator.vibrate) navigator.vibrate(8);
         };
-        
+
         const isFavorite=(item)=>favorites.value.includes(item.id);
         const toggleFavorite=(item)=>{
           if(isFavorite(item)){
             favorites.value=favorites.value.filter(id=>id!==item.id);
             Toast('已取消收藏');
           }else{
-            favorites.value.push(item.id);
+            favorites.value=[...favorites.value,item.id];
             Toast.success('已收藏！');
+            triggerConfetti();
           }
           localStorage.setItem(FAV_KEY,JSON.stringify(favorites.value));
+          if(navigator.vibrate) navigator.vibrate([15,20,15]);
         };
-        
+
+        // Confetti
+        const confettiContainer=ref(null);
+        const triggerConfetti=()=>{
+          nextTick(()=>{
+            const container=document.querySelector('.confetti-container');
+            if(!container)return;
+            const colors=['#FF3B30','#FF9500','#34C759','#007AFF','#AF52DE','#FF2D55'];
+            for(let i=0;i<40;i++){
+              const piece=document.createElement('div');
+              piece.className='confetti-piece';
+              piece.style.left=Math.random()*100+'%';
+              piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+              piece.style.animationDelay=Math.random()*0.8+'s';
+              piece.style.animationDuration=(2+Math.random()*2)+'s';
+              piece.style.width=(6+Math.random()*8)+'px';
+              piece.style.height=(6+Math.random()*8)+'px';
+              piece.style.borderRadius=Math.random()>0.5?'50%':'2px';
+              container.appendChild(piece);
+              setTimeout(()=>piece.remove(),4000);
+            }
+          });
+        };
+
         const doCheckin=()=>{
           const now=new Date();
           const dateStr=`${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
           const allFoods=[...selectedFoods.value.map(f=>f.name),...customFoods.value.map(f=>f.name)];
-          checkinHistory.value.unshift({
+          checkinHistory.value=[{
             restaurantId:selectedRestaurant.value.id,
             restaurantName:selectedRestaurant.value.name,
             emoji:selectedRestaurant.value.emoji,
             foods:allFoods,
             calories:totalCalories.value,
             date:dateStr
-          });
+          },...checkinHistory.value];
           localStorage.setItem(CHECKIN_KEY,JSON.stringify(checkinHistory.value));
-          Toast.success(`✅ 打卡成功！${totalCalories.value}kcal`);
-          setTimeout(()=>{closeDetail();},800);
+          triggerConfetti();
+          if(navigator.vibrate) navigator.vibrate([30,50,80,100,50]);
+          Toast.success({message:`✅ 打卡成功！${totalCalories.value}kcal 🎉`,wordBreak:'break-word'});
+          setTimeout(()=>{closeDetail();},1200);
         };
-        
+
         const getRestaurantEmoji=(id)=>{
           const r=restaurants.main.find(x=>x.id===id)||restaurants.drinks.find(x=>x.id===id);
           return r?r.emoji:'🍽️';
         };
-        
+
         return{
+          loaded,loadPercent,
           isDark,toggleTheme,
           activeTab,searchText,currentRating,selectedRestaurant,selectedFoods,favorites,checkinHistory,
           customFoodText,customFoodHints,customFoods,customFoodManualCal,
-          totalCalories,currentList,filteredRestaurants,favoriteRestaurants,
+          totalCalories,calorieAnimating,currentList,filteredRestaurants,favoriteRestaurants,
           showSlot,isSpinning,slotResult,todayStr,fortuneIcon,fortuneText,
-          onTabChange,filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,
+          filterByRating,showDetail,closeDetail,parseFoods,isFoodSelected,toggleFood,
           isFavorite,toggleFavorite,doCheckin,getRestaurantEmoji,
           openSlotMachine,closeSlotMachine,spinSlot,viewSlotResult,
-          onCustomFoodInput,selectCustomHint,addCustomFoodHint,removeCustomFood
+          onCustomFoodInput,selectCustomHint,addCustomFoodHint,removeCustomFood,
+          onSwipeStart,onSwipeMove,onSwipeEnd,onCellClick,getSwipeClass,doSwipeFavorite,doSwipeSkip,
+          confettiContainer
         };
       }
     }).use(vant).mount('#app');
