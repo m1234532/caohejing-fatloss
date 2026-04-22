@@ -1,0 +1,10 @@
+{
+  "name": "漕河泾减脂餐厅推荐",
+  "short_name": "减脂餐厅",
+  "description": "漕河泾印象城减脂友好餐厅推荐",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00BCD4",
+  "orientation": "portrait"
+}
