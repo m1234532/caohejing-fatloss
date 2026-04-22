@@ -233,9 +233,9 @@
       </div>
     </div>
     
-    <div class="bottom-info" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.value.length}} 家餐厅 | 数据更新于2026年4月</div>
-    <div class="bottom-info" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.value.length}} 家餐厅</div>
-    <div class="bottom-info" v-if="activeTab==='checkins'">共 {{checkinHistory.value.length}} 条打卡记录</div>
+    <div class="bottom-info" v-if="activeTab==='main' || activeTab==='drinks'">共 {{currentList.length}} 家餐厅 | 数据更新于2026年4月</div>
+    <div class="bottom-info" v-if="activeTab==='favorites'">已收藏 {{favoriteRestaurants.length}} 家餐厅</div>
+    <div class="bottom-info" v-if="activeTab==='checkins'">共 {{checkinHistory.length}} 条打卡记录</div>
     
     <!-- Floating Button -->
     <div class="float-btn" @click="openSlotMachine">🎰</div>
@@ -314,7 +314,7 @@
           <div class="detail-section-title">✅ 低卡推荐菜（点击选择）</div>
           <div class="food-grid">
             <div class="food-card recommend" 
-                 :class="{selected:isFoodSelected(rec)}" 
+                 :class="{selected:isFoodSelected(food)}" 
                  v-for="(food, idx) in parseFoods(selectedRestaurant.recommend)" 
                  :key="'rec-'+idx"
                  @click="toggleFood(food)">
@@ -330,7 +330,7 @@
           <div class="detail-section-title">🚫 减脂期避免（点击选择）</div>
           <div class="food-grid">
             <div class="food-card avoid" 
-                 :class="{selected:isFoodSelected(avoid)}" 
+                 :class="{selected:isFoodSelected(food)}" 
                  v-for="(food, idx) in parseFoods(selectedRestaurant.avoid)" 
                  :key="'avoid-'+idx"
                  @click="toggleFood(food)">
